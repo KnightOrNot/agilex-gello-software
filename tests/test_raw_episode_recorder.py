@@ -4,7 +4,7 @@ import unittest
 from datetime import datetime, timezone
 from pathlib import Path
 
-from gello.data_utils.raw_episode_recorder import RawEpisodeRecorder, RecordingError
+from agilex_gello_software.data_utils.raw_episode_recorder import RawEpisodeRecorder, RecordingError
 
 
 class RawEpisodeRecorderTest(unittest.TestCase):

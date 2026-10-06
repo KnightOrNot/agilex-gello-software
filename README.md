@@ -1,6 +1,8 @@
-# gello_software
+# agilex-gello-software
 
-`gello_software` 是 GELLO 主手的独立软件项目。本仓库在上游 GELLO 的基础上增加了七自由度状态读取、AgileX PiPER-X 遥操作、JS 定位和原始数据记录，并使用 uv 统一管理 Python、依赖、虚拟环境、锁文件和命令行入口。
+仓库及安装包名称为 `agilex-gello-software`，Python 导入包为 `agilex_gello_software`。命令入口：`agilex-gello-software`（兼容短命令 `gello`）。
+
+`agilex-gello-software` 是 GELLO 主手的独立软件项目。本仓库在上游 GELLO 的基础上增加了七自由度状态读取、AgileX PiPER-X 遥操作、JS 定位和原始数据记录，并使用 uv 统一管理 Python、依赖、虚拟环境、锁文件和命令行入口。
 
 > [!WARNING]
 > `read` 只读取 GELLO，但 `follow`、`follow-record`、`movejs` 以及部分官方工作流会向真实机械臂发送命令。运行前必须固定设备、清空工作空间并确保急停按钮触手可及。
@@ -9,12 +11,12 @@
 ## （1）项目能力
 
 - 通过 FTDI/Dynamixel Protocol 2.0 读取 GELLO J1～J6 与夹爪位置
-- 通过 ZMQ 连接 `agilexrobotics`，控制 PiPER-X 六轴与 AGX 夹爪
+- 通过 ZMQ 连接 `agilex-sdk-python`，控制 PiPER-X 六轴与 AGX 夹爪
 - 以指定 `--hz` 运行跟随和原始 JSONL 数据记录
 - 支持上游 YAML、ZMQ、相机和 MuJoCo 工作流
-- 统一使用 `uv run gello COMMAND [OPTIONS]`，不再直接维护每个实验脚本的 Python 启动方式
+- 统一使用 `uv run agilex-gello-software COMMAND [OPTIONS]`，不再直接维护每个实验脚本的 Python 启动方式
 
-详细实现、参数含义和故障排查见[开发与调试手册](docs/DEVELOPMENT.md)，上游原始说明保存在[官方 README](docs/README_OFFICIAL.md)，该文件不随本地架构调整而修改。
+详细实现、参数含义和故障排查见[开发与调试手册](docs/DEVELOPMENT.md)，上游原始说明保存在[官方 README](docs/README_OFFICIAL.md)，该文件保留上游功能说明，仓库名称和安装路径已适配当前项目。
 
 ## （2）环境要求
 
@@ -23,7 +25,7 @@
 - pyenv 和 Python 3.11；`.python-version` 声明项目版本
 - uv
 - GELLO 主手及 FTDI/Dynamixel 串口适配器
-- PiPER-X 功能额外需要独立的 `agilexrobotics` 服务与 USB-CAN
+- PiPER-X 功能额外需要独立的 `agilex-sdk-python` 服务与 USB-CAN
 - 仿真功能额外需要 MuJoCo Menagerie 资产 submodule
 
 ## （3）快速开始
@@ -43,15 +45,15 @@ uv --version
 不使用仿真时，普通 clone 即可：
 
 ```bash
-git clone git@github.com:right-or-not/gello_software.git
-cd gello_software
+git clone git@github.com:KnightOrNot/agilex-gello-software.git
+cd agilex-gello-software
 ```
 
 需要 MuJoCo 仿真时，一并拉取 Menagerie：
 
 ```bash
-git clone --recurse-submodules git@github.com:right-or-not/gello_software.git
-cd gello_software
+git clone --recurse-submodules git@github.com:KnightOrNot/agilex-gello-software.git
+cd agilex-gello-software
 ```
 
 已经 clone 的仓库可在之后补充资产：
@@ -102,19 +104,19 @@ test -r /dev/ttyUSB0 && test -w /dev/ttyUSB0 && echo "GELLO 权限正常"
 
 ### 5. 确认端口映射
 
-串口路径必须存在于 `src/gello/agents/gello_agent.py` 的 `PORT_CONFIG_MAP` 中。若设备路径不同，需要为实际硬件配置舵机 ID、offset、方向系数和夹爪端点；不要只替换未知串口路径后直接启动机械臂。
+串口路径必须存在于 `src/agilex_gello_software/agents/gello_agent.py` 的 `PORT_CONFIG_MAP` 中。若设备路径不同，需要为实际硬件配置舵机 ID、offset、方向系数和夹爪端点；不要只替换未知串口路径后直接启动机械臂。
 
 ### 6. 只读验证 GELLO
 
 ```bash
-uv run gello read \
+uv run agilex-gello-software read \
   --gello-port /dev/serial/by-id/usb-FTDI_USB__-__Serial_Converter_FTBM4Z46-if00-port0
 ```
 
 机器可读输出：
 
 ```bash
-uv run gello read \
+uv run agilex-gello-software read \
   --gello-port /dev/serial/by-id/usb-FTDI_USB__-__Serial_Converter_FTBM4Z46-if00-port0 \
   --json
 ```
@@ -124,8 +126,8 @@ uv run gello read \
 查看所有命令：
 
 ```bash
-uv run gello --help
-uv run gello follow --help
+uv run agilex-gello-software --help
+uv run agilex-gello-software follow --help
 ```
 
 | 命令 | 功能 | 依赖范围 |
@@ -139,24 +141,24 @@ uv run gello follow --help
 | `camera-server`、`camera-client` | RealSense 服务和显示 | `camera` |
 | `quick-run`、`run-env` | 上游通用工作流 | `full` |
 
-`experiments/*.py` 暂时保留为兼容包装器，现有外部脚本仍可运行；新增使用和开发统一面向 `gello` CLI。
+`experiments/*.py` 暂时保留为兼容包装器，现有外部脚本仍可运行；新增使用和开发统一面向 `agilex-gello-software` CLI。
 
 ## （5）PiPER-X 最小联调
 
-终端 1 启动 `agilexrobotics` 服务：
+终端 1 启动 `agilex-sdk-python` 服务：
 
 ```bash
-cd /path/to/agilexrobotics
+cd /path/to/agilex-sdk-python
 ./scripts/config_can.sh
-uv run ag status
-uv run ag-gello-server --hz 50
+uv run agilex-sdk-python status
+uv run agilex-sdk-python-server --hz 50
 ```
 
 终端 2 启动 GELLO 客户端：
 
 ```bash
-cd /path/to/gello_software
-uv run gello follow \
+cd /path/to/agilex-gello-software
+uv run agilex-gello-software follow \
   --gello-port /dev/serial/by-id/usb-FTDI_USB__-__Serial_Converter_FTBM4Z46-if00-port0 \
   --start-joints 0 0 0 0 0 0 \
   --hz 50
@@ -169,7 +171,7 @@ uv run gello follow \
 ```bash
 uv sync --dev
 uv run pytest -q
-uv run ruff check src/gello/cli.py src/gello/paths.py tests experiments
+uv run ruff check src/agilex_gello_software/cli.py src/agilex_gello_software/paths.py tests experiments
 ```
 
 ## （7）常见问题

@@ -2,7 +2,7 @@ import unittest
 
 import numpy as np
 
-from gello.commands.follow_record import _sample_from_cycle
+from agilex_gello_software.commands.follow_record import _sample_from_cycle
 
 
 class PiperXFollowRecordTest(unittest.TestCase):

@@ -1,8 +1,8 @@
-"""Compatibility wrapper for ``gello camera-server``."""
+"""Compatibility wrapper for ``agilex-gello-software camera-server``."""
 
 import tyro
 
-from gello.commands.camera_server import Args, main
+from agilex_gello_software.commands.camera_server import Args, main
 
 if __name__ == "__main__":
     raise SystemExit(main(tyro.cli(Args)))

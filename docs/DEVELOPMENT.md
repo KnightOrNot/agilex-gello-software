@@ -1,6 +1,6 @@
-# gello_software 开发与调试手册
+# agilex-gello-software 开发与调试手册
 
-本文档记录本地扩展、脚本参数、PiPER-X 联调、数据映射和 Dynamixel 故障排查。首次安装和最小设备验证请先阅读[项目 README](../README.md)；原项目说明保存在[官方 README](README_OFFICIAL.md)。以下命令默认在 `gello_software/` 目录执行。
+本文档记录本地扩展、脚本参数、PiPER-X 联调、数据映射和 Dynamixel 故障排查。首次安装和最小设备验证请先阅读[项目 README](../README.md)；原项目说明保存在[官方 README](README_OFFICIAL.md)。以下命令默认在 `agilex-gello-software/` 目录执行。
 
 > 本仓库基于官方 GELLO 软件扩展，当前主要用于读取七自由度 GELLO 主手，并通过 ZMQ 控制 AgileX PiPER-X 六轴机械臂和 AGX 夹爪。
 
@@ -15,7 +15,7 @@ GelloAgent / DynamixelDriver
         ↓ 七维目标 [J1..J6, gripper]
 piper_x_follow.py
         ↓ ZMQ tcp://127.0.0.1:6001
-ag-gello-server
+agilex-sdk-python-server
         ↓ SocketCAN / move_js
 PiPER-X J1～J6 + AGX gripper
 ```
@@ -36,20 +36,20 @@ PiPER-X 方向系数：1 1 -1 -1 1 1
 
 | 内容              | 文件                                                        | 功能                                                        |
 | --------------- | --------------------------------------------------------- | --------------------------------------------------------- |
-| GELLO 状态读取      | `gello read`                        | 打印映射后的 J1～J6 和归一化夹爪值                                      |
-| PiPER-X 跟随客户端   | `gello follow`                           | 完成七维映射、启动对齐、ZMQ 命令发送和跟随                                   |
-| PiPER-X 跟随记录客户端 | `gello follow-record`                    | 保持相同跟随逻辑，并将最终 action 和实际 observation 异步写入原始 JSONL episode |
-| PiPER-X JS 定位   | `gello movejs`                           | 通过现有 ZMQ/JS 会话分步移动到零位或指定目标                                |
-| 原始 episode 记录器  | `src/gello/data_utils/raw_episode_recorder.py`                | 管理 session、manifest、异步队列、保存、丢弃和异常 `.partial` 文件           |
-| 串口通信保护          | `src/gello/dynamixel/driver.py`                               | 检查初始化失败、连续超时、反馈过期和串口占用                                    |
-| 串口释放路径          | `src/gello/agents/gello_agent.py`、`src/gello/robots/dynamixel.py` | 退出时停止后台线程并释放 FTDI 串口                                      |
+| GELLO 状态读取      | `agilex-gello-software read`                        | 打印映射后的 J1～J6 和归一化夹爪值                                      |
+| PiPER-X 跟随客户端   | `agilex-gello-software follow`                           | 完成七维映射、启动对齐、ZMQ 命令发送和跟随                                   |
+| PiPER-X 跟随记录客户端 | `agilex-gello-software follow-record`                    | 保持相同跟随逻辑，并将最终 action 和实际 observation 异步写入原始 JSONL episode |
+| PiPER-X JS 定位   | `agilex-gello-software movejs`                           | 通过现有 ZMQ/JS 会话分步移动到零位或指定目标                                |
+| 原始 episode 记录器  | `src/agilex_gello_software/data_utils/raw_episode_recorder.py`                | 管理 session、manifest、异步队列、保存、丢弃和异常 `.partial` 文件           |
+| 串口通信保护          | `src/agilex_gello_software/dynamixel/driver.py`                               | 检查初始化失败、连续超时、反馈过期和串口占用                                    |
+| 串口释放路径          | `src/agilex_gello_software/agents/gello_agent.py`、`src/agilex_gello_software/robots/dynamixel.py` | 退出时停止后台线程并释放 FTDI 串口                                      |
 | 完整自动流程          | `../start_gello_follow.sh`                                | 配置 CAN、检查设备、读取 GELLO、JS 校准、跟随和安全回零                        |
 | 跟随与数据记录流程       | `../start_data_record.sh`                                 | 保留同一安全流程，并调用独立记录客户端；不修改普通跟随入口                             |
 
 ### 2. 主要文件结构
 
 ```text
-gello_software/
+agilex-gello-software/
 ├── README.md
 ├── docs/
 │   ├── DEVELOPMENT.md
@@ -64,7 +64,7 @@ gello_software/
 ├── scripts/
 │   ├── generate_yam_config.py
 │   └── gello_get_offset.py
-├── src/gello/
+├── src/agilex_gello_software/
 │   ├── cli.py
 │   ├── commands/
 │   ├── agents/gello_agent.py
@@ -82,22 +82,22 @@ gello_software/
 | `experiments/piper_x_follow.py`            | 连接 GELLO 和 PiPER-X ZMQ 服务，执行方向映射、启动检查和连续跟随           |
 | `experiments/piper_x_follow_record.py`     | 使用独立入口执行相同跟随，并在最终 action 下发和 observation 返回位置生成原始样本  |
 | `experiments/piper_x_movejs.py`            | 在服务端已运行时，通过同一 JS 会话分步定位并验收误差                         |
-| `src/gello/data_utils/raw_episode_recorder.py` | 使用后台线程将有界队列中的样本写入 JSONL，正常保存时原子改名，异常退出时保留 `.partial` |
+| `src/agilex_gello_software/data_utils/raw_episode_recorder.py` | 使用后台线程将有界队列中的样本写入 JSONL，正常保存时原子改名，异常退出时保留 `.partial` |
 | `experiments/launch_yaml.py`               | 按 YAML 创建官方 GELLO agent/robot，支持单臂、双臂和保存接口           |
 | `scripts/generate_yam_config.py`           | 检测 YAM GELLO 偏移并生成硬件、仿真 YAML                         |
 | `scripts/gello_get_offset.py`              | 根据已知姿态计算 GELLO 关节 offset                             |
-| `src/gello/agents/gello_agent.py`              | 保存串口对应的 ID、offset、sign 和 gripper 配置                  |
-| `src/gello/robots/dynamixel.py`                | 将原始电机角度转换为 GELLO 状态并归一化夹爪                            |
-| `src/gello/dynamixel/driver.py`                | 管理 FTDI、Group Sync Read、通信超时、读取线程和资源释放               |
-| `src/gello/env.py`                             | 按目标频率执行 robot command 并组合 observation                |
-| `src/gello/zmq_core/robot_node.py`             | 实现 GELLO Robot 的 ZMQ 客户端和服务端协议                       |
+| `src/agilex_gello_software/agents/gello_agent.py`              | 保存串口对应的 ID、offset、sign 和 gripper 配置                  |
+| `src/agilex_gello_software/robots/dynamixel.py`                | 将原始电机角度转换为 GELLO 状态并归一化夹爪                            |
+| `src/agilex_gello_software/dynamixel/driver.py`                | 管理 FTDI、Group Sync Read、通信超时、读取线程和资源释放               |
+| `src/agilex_gello_software/env.py`                             | 按目标频率执行 robot command 并组合 observation                |
+| `src/agilex_gello_software/zmq_core/robot_node.py`             | 实现 GELLO Robot 的 ZMQ 客户端和服务端协议                       |
 
 ## （2）安装与设备检查
 
 ### 1. 安装 Python 环境
 
 ```bash
-cd /path/to/gello_software
+cd /path/to/agilex-gello-software
 requested_version="$(<.python-version)"
 resolved_version="$(pyenv latest -k "$requested_version")"
 pyenv install -s "$resolved_version"
@@ -133,11 +133,11 @@ lsof /dev/serial/by-id/usb-FTDI_USB__-__Serial_Converter_FTBM4Z46-if00-port0
 | -------------------------------------- | ------------------------------ | ------------------------- |
 | `../start_gello_follow.sh`             | 自动完成设备检查、JS 校准、跟随和 Ctrl+C 安全回零 | 是，推荐入口                    |
 | `../start_data_record.sh`              | 完成相同安全跟随流程并记录第一阶段原始数据          | 是，数据采集入口                  |
-| `uv run gello read`     | 读取 GELLO 当前 J1～J6 和 gripper    | 否                         |
-| `uv run gello follow`        | 手动启动 GELLO 到 PiPER-X 的跟随客户端    | 是，需要服务端                   |
-| `uv run gello follow-record` | 手动启动带原始记录的 PiPER-X 跟随客户端       | 是，需要服务端                   |
-| `uv run gello movejs`        | 通过已运行的服务端让 PiPER-X JS 定位       | 是，需要服务端                   |
-| `uv run gello launch-yaml`           | 运行官方 YAML 工作流                  | 取决于 YAML，不用于当前 PiPER-X 跟随 |
+| `uv run agilex-gello-software read`     | 读取 GELLO 当前 J1～J6 和 gripper    | 否                         |
+| `uv run agilex-gello-software follow`        | 手动启动 GELLO 到 PiPER-X 的跟随客户端    | 是，需要服务端                   |
+| `uv run agilex-gello-software follow-record` | 手动启动带原始记录的 PiPER-X 跟随客户端       | 是，需要服务端                   |
+| `uv run agilex-gello-software movejs`        | 通过已运行的服务端让 PiPER-X JS 定位       | 是，需要服务端                   |
+| `uv run agilex-gello-software launch-yaml`           | 运行官方 YAML 工作流                  | 取决于 YAML，不用于当前 PiPER-X 跟随 |
 
 ### 1. 一键启动 PiPER-X 跟随
 
@@ -153,7 +153,7 @@ cd ~/projects
 1. 配置 PiPER-X CAN。
 2. 检查 GELLO 串口和 PiPER-X CAN。
 3. 读取 GELLO 当前 J1～J6 和 gripper。
-4. 启动 `ag-gello-server`，通过 JS 分步回零。
+4. 启动 `agilex-sdk-python-server`，通过 JS 分步回零。
 5. 通过同一 JS 会话对齐 PiPER-X 与 GELLO。
 6. 启动 `piper_x_follow.py` 进入跟随。
 
@@ -217,8 +217,8 @@ cd ~/projects
 推荐命令：
 
 ```bash
-cd ~/projects/gello_software
-uv run gello read \
+cd ~/projects/agilex/agilex-gello-software
+uv run agilex-gello-software read \
   --gello-port /dev/serial/by-id/usb-FTDI_USB__-__Serial_Converter_FTBM4Z46-if00-port0
 ```
 
@@ -235,7 +235,7 @@ uv run gello read \
 完整示例：
 
 ```bash
-uv run gello read \
+uv run agilex-gello-software read \
   --gello-port /dev/serial/by-id/usb-FTDI_USB__-__Serial_Converter_FTBM4Z46-if00-port0 \
   --baudrate 57600 \
   --json
@@ -246,15 +246,15 @@ uv run gello read \
 先在终端 1 启动 PiPER-X 服务端：
 
 ```bash
-cd ~/projects/agilexrobotics
-uv run ag-gello-server
+cd ~/projects/agilex/agilex-sdk-python
+uv run agilex-sdk-python-server
 ```
 
 再在终端 2 启动 GELLO 客户端：
 
 ```bash
-cd ~/projects/gello_software
-uv run gello follow \
+cd ~/projects/agilex/agilex-gello-software
+uv run agilex-gello-software follow \
   --gello-port /dev/serial/by-id/usb-FTDI_USB__-__Serial_Converter_FTBM4Z46-if00-port0 \
   --start-joints 0 0 0 0 0 0
 ```
@@ -283,7 +283,7 @@ GELLO and PiPER-X aligned; teleoperation started (Ctrl-C to stop)
 完整示例：
 
 ```bash
-uv run gello follow \
+uv run agilex-gello-software follow \
   --gello-port /dev/serial/by-id/usb-FTDI_USB__-__Serial_Converter_FTBM4Z46-if00-port0 \
   --hostname 127.0.0.1 \
   --robot-port 6001 \
@@ -300,18 +300,18 @@ uv run gello follow \
 
 ### 4. 通过现有 JS 服务定位 PiPER-X
 
-该工具不读取 GELLO，只连接已经运行的 `ag-gello-server`。服务端未启动时不能单独使用。
+该工具不读取 GELLO，只连接已经运行的 `agilex-sdk-python-server`。服务端未启动时不能单独使用。
 
 移动到零位并保持当前夹爪：
 
 ```bash
-uv run gello movejs
+uv run agilex-gello-software movejs
 ```
 
 移动到指定目标：
 
 ```bash
-uv run gello movejs \
+uv run agilex-gello-software movejs \
   --joints 0 0 0 0 0 0 \
   --gripper 0.5
 ```
@@ -368,14 +368,14 @@ uv run python scripts/gello_get_offset.py \
 单臂：
 
 ```bash
-uv run gello launch-yaml \
+uv run agilex-gello-software launch-yaml \
   --left-config-path configs/yam_auto_generated.yaml
 ```
 
 双臂：
 
 ```bash
-uv run gello launch-yaml \
+uv run agilex-gello-software launch-yaml \
   --left-config-path configs/left.yaml \
   --right-config-path configs/right.yaml
 ```
@@ -451,7 +451,7 @@ COMM_RX_TIMEOUT = -3001
 
 - 同一时间只运行一个访问 GELLO FTDI 串口的进程。
 - PiPER-X 推荐使用父目录一键脚本，不要混用官方 YAM YAML 工作流。
-- `piper_x_movejs.py` 必须连接已启动的 `ag-gello-server`。
+- `piper_x_movejs.py` 必须连接已启动的 `agilex-sdk-python-server`。
 - 当前 PiPER-X 跟随、校准和退出回零全部保持在 JS 模式。
 - 不要在跟随退出时额外执行普通 J 模式的 `zero` 或 `move_j`。
 - 不要使用 `kill -9` 结束一键脚本，否则无法执行 JS 安全回零。

@@ -50,7 +50,7 @@ operating_modes:
 ### Regular Driver
 
 ```python
-from gello.dynamixel.driver import DynamixelDriver
+from agilex_gello_software.dynamixel.driver import DynamixelDriver
 try:
   driver = DynamixelDriver(
       ids=[1, 2, 3], 
@@ -66,7 +66,7 @@ except ConnectionError as e:
 ### Fake Driver for Testing
 
 ```python
-from gello.dynamixel.driver import FakeDynamixelDriver
+from agilex_gello_software.dynamixel.driver import FakeDynamixelDriver
 
 fake_driver = FakeDynamixelDriver(ids=[1, 2, 3], motor_type="xl330")
 ```

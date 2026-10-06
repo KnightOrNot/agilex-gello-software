@@ -15,7 +15,7 @@ import numpy as np
 import tyro
 import yaml
 
-from gello.dynamixel.driver import DynamixelDriver
+from agilex_gello_software.dynamixel.driver import DynamixelDriver
 
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 
@@ -309,10 +309,10 @@ def main(args: Args) -> None:
     print()
     print("You can now run GELLO with:")
     print(
-        f"   Hardware: uv run gello launch-yaml --left-config-path {hardware_output_path}"
+        f"   Hardware: uv run agilex-gello-software launch-yaml --left-config-path {hardware_output_path}"
     )
     print(
-        f"   Simulation: uv run gello launch-yaml --left-config-path {sim_output_path}"
+        f"   Simulation: uv run agilex-gello-software launch-yaml --left-config-path {sim_output_path}"
     )
     print()
     print("Configuration files generated successfully!")

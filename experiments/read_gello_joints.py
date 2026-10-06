@@ -1,6 +1,6 @@
-"""Compatibility wrapper for ``gello read``."""
+"""Compatibility wrapper for ``agilex-gello-software read``."""
 
-from gello.commands.read import main
+from agilex_gello_software.commands.read import main
 
 if __name__ == "__main__":
     raise SystemExit(main())

@@ -1,6 +1,6 @@
 """Software-only checks for the unified command-line dispatcher."""
 
-from gello.cli import COMMANDS, main
+from agilex_gello_software.cli import COMMANDS, main
 
 
 def test_top_level_help(capsys):

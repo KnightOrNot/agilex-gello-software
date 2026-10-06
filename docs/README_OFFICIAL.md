@@ -1,7 +1,7 @@
 # GELLO: General, Low-Cost, and Intuitive Teleoperation Framework
 
 <p align="center">
-  <img src="imgs/title.png" />
+  <img src="../imgs/title.png" />
 </p>
 
 GELLO is a general, low-cost, and intuitive teleoperation framework for robot manipulators. This repository contains all the software components for GELLO.
@@ -10,12 +10,12 @@ For additional resources:
 
 - [Project Website](https://wuphilipp.github.io/gello_site/)
 - [Hardware Repository](https://github.com/wuphilipp/gello_mechanical) - STL files and build instructions
-- [ROS 2 Support](ros2/README.md)
+- [ROS 2 Support](../ros2/README.md)
 
 ## Supported Robots
 
 - **I2RT YAM**
-- **Franka FR3** (ROS 2 implementation, please refer to the separate documenation in [`ros2/README.md`](ros2/README.md))
+- **Franka FR3** (ROS 2 implementation, please refer to the separate documenation in [`ros2/README.md`](../ros2/README.md))
 - **Franka FER (Panda)**
 - **UR**
 - **xArm**
@@ -24,8 +24,8 @@ For additional resources:
 ## Quick Start
 
 ```bash
-git clone https://github.com/wuphilipp/gello_software.git
-cd gello_software
+git clone https://github.com/KnightOrNot/agilex-gello-software.git
+cd agilex-gello-software
 ```
 
 ## Installation
@@ -41,13 +41,9 @@ curl -LsSf https://astral.sh/uv/install.sh | sh
 Create and activate a virtual environment:
 
 ```bash
-uv venv --python 3.11
+uv sync --frozen --extra full --python 3.11
 source .venv/bin/activate  # Run this every time you open a new shell
-git submodule init
-git submodule update
-uv pip install -r requirements.txt
-uv pip install -e .
-uv pip install -e third_party/DynamixelSDK/python
+git submodule update --init --recursive
 ```
 
 ### Option 2: Docker
@@ -55,13 +51,13 @@ uv pip install -e third_party/DynamixelSDK/python
 Install [Docker](https://docs.docker.com/engine/install/ubuntu/), then:
 
 ```bash
-docker build . -t gello:latest
+docker build . -t agilex-gello-software:latest
 python scripts/launch.py
 ```
 
 ### ROS 2 Support
 
-> **Note:** GELLO also supports ROS 2 Humble for the Franka FR3 robot. See the [ROS 2-specific README](ros2/README.md) in the `ros2` directory.
+> **Note:** GELLO also supports ROS 2 Humble for the Franka FR3 robot. See the [ROS 2-specific README](../ros2/README.md) in the `ros2` directory.
 
 ## Hardware Configuration
 
@@ -87,7 +83,7 @@ For the I2RT YAM robot, you can automatically generate your configuration files.
     Follow the prompts in the terminal. This will create `configs/yam_auto_generated.yaml` for the real robot and `configs/yam_auto_generated_sim.yaml` for the simulation.
 
 <p align="center">
-  <img src="imgs/yam_default.JPG" width="42%">
+  <img src="../imgs/yam_default.JPG" width="42%">
 </p>
 
 You can now skip to the [Usage](#usage) section.
@@ -112,7 +108,7 @@ Sample configs for the YAM arm and the xarm can be found in `configs`.
 #### Python Configuration for Non-YAM arms
 
 - Most widely supported across different arms
-- Located in `gello/agents/gello_agent.py`
+- Located in `src/agilex_gello_software/agents/gello_agent.py`
 - Uses `PORT_CONFIG_MAP` dictionary
 - Maps USB serial ports to robot configurations
 
@@ -121,10 +117,10 @@ Sample configs for the YAM arm and the xarm can be found in `configs`.
 To integrate a new robot to the Python configs:
 
 1. **Check Compatibility**: Ensure your GELLO kinematics match the target robot
-2. **Implement Robot Interface**: Create a new class implementing the `Robot` protocol from `gello/robots/robot.py`
+2. **Implement Robot Interface**: Create a new class implementing the `Robot` protocol from `src/agilex_gello_software/robots/robot.py`
 3. **Add Configuration**: Update the configuration system with your robot's parameters
 
-See existing implementations in `gello/robots/` for reference:
+See existing implementations in `src/agilex_gello_software/robots/` for reference:
 
 - `panda.py` - Franka Panda robot
 - `ur.py` - Universal Robots
@@ -138,9 +134,9 @@ See existing implementations in `gello/robots/` for reference:
 Set your GELLO and robot arm to a known, matching configuration (see images below) and run the offset detection script.
 
 <p align="center">
-  <img src="imgs/gello_matching_joints.jpg" width="29%"/>
-  <img src="imgs/robot_known_configuration.jpg" width="29%"/>
-  <img src="imgs/fr3_gello_calib_pose.jpeg" width="31%"/>
+  <img src="../imgs/gello_matching_joints.jpg" width="29%"/>
+  <img src="../imgs/robot_known_configuration.jpg" width="29%"/>
+  <img src="../imgs/fr3_gello_calib_pose.jpeg" width="31%"/>
 </p>
 
 **Command examples:**
@@ -179,14 +175,14 @@ python scripts/gello_get_offset.py \
 - xArm: `1 1 1 1 1 1 1`
 - YAM: `1 -1 -1 -1 1 1`
 
-Add the generated joint offsets to `gello/agents/gello_agent.py` in the `PORT_CONFIG_MAP`.
+Add the generated joint offsets to `src/agilex_gello_software/agents/gello_agent.py` in the `PORT_CONFIG_MAP`.
 
 #### Read the current GELLO joints
 
 Use the read-only experiment command to print the mapped J1–J6 positions in radians and degrees, followed by the normalized gripper value:
 
 ```bash
-cd ~/projects/gello_software
+cd ~/projects/agilex/agilex-gello-software
 .venv/bin/python experiments/read_gello_joints.py \
     --gello-port /dev/serial/by-id/usb-FTDI_USB__-__Serial_Converter_FTBM4Z46-if00-port0
 ```
@@ -197,8 +193,8 @@ Stop any running GELLO client before using this command because only one process
 
 1. Copy an existing config from `configs/` as a template (e.g., `yam_passive.yaml`).
 2. Modify the robot `_target_` and parameters for your setup:
-   - For hardware: `gello.robots.ur.URRobot`, `gello.robots.panda.PandaRobot`, etc.
-   - For simulation: `gello.robots.sim_robot.MujocoRobotServer`
+   - For hardware: `agilex_gello_software.robots.ur.URRobot`, `agilex_gello_software.robots.panda.PandaRobot`, etc.
+   - For simulation: `agilex_gello_software.robots.sim_robot.MujocoRobotServer`
 3. Update the agent configuration with your GELLO device settings:
    - `port`: Your U2D2 device path
    - `joint_offsets`: From the offset detection script
@@ -326,7 +322,7 @@ python experiments/run_env.py --agent=gello --use-save-interface
 Process collected data:
 
 ```bash
-python gello/data_utils/demo_to_gdict.py --source-dir=<source_dir>
+python src/agilex_gello_software/data_utils/demo_to_gdict.py --source-dir=<source_dir>
 ```
 
 ### Bimanual Operation
@@ -346,14 +342,14 @@ python experiments/run_env.py --agent=gello --bimanual
 
 ### FACTR Gravity Compensation
 
-If you want to activate gravity compensation, all the code can be found in `gello/factr`. It works similarly to the regular launch but for now it's self-contained inside its own subdirectory and supports the YAM arm in sim and in hardware.
+If you want to activate gravity compensation, all the code can be found in `src/agilex_gello_software/factr`. It works similarly to the regular launch but for now it's self-contained inside its own subdirectory and supports the YAM arm in sim and in hardware.
 
 The YAML provides important fields that can control the strength of the gravity compensation and friction. Feel free to mess around with the strenght and friction til you attain your desired
 
 One important step is to add the URDF. We have provided the URDF for the active GELLO in the [Hardware Repository](https://github.com/wuphilipp/gello_mechanical). You will need to update the path in the YAML to the entry point of the URDF.
 
 ```bash
-python gello/factr/gravity_compensation.py --config configs/yam_gello_factr_hw.yaml
+python src/agilex_gello_software/factr/gravity_compensation.py --config configs/yam_gello_factr_hw.yaml
 ```
 
 ## Development
@@ -363,7 +359,7 @@ python gello/factr/gravity_compensation.py --config configs/yam_gello_factr_hw.y
 ```
 ├── scripts/             # Utility scripts
 ├── experiments/         # Entry points and launch scripts
-├── gello/               # Core GELLO package
+├── src/agilex_gello_software/               # Core GELLO package
 │   ├── agents/          # Teleoperation agents
 │   ├── cameras/         # Camera interfaces
 │   ├── data_utils/      # Data processing utilities
@@ -380,7 +376,7 @@ python gello/factr/gravity_compensation.py --config configs/yam_gello_factr_hw.y
 Install development dependencies and set up pre-commit hooks to ensure code quality before contributing:
 
 ```bash
-uv pip install -r requirements_dev.txt
+uv sync --frozen --group dev
 uv pip install pre-commit
 pre-commit install
 ```

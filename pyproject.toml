@@ -1,5 +1,5 @@
 [project]
-name = "gello"
+name = "agilex-gello-software"
 version = "0.1.0"
 description = "GELLO teleoperation and PiPER-X data collection software"
 readme = "README.md"
@@ -23,7 +23,8 @@ robots = ["pyspacemouse>=1.1", "pure-python-adb>=0.3.0.dev0", "ur-rtde>=1.6", "x
 full = ["dm-control>=1.0.20", "mujoco>=3.2", "numpy-quaternion>=2024.0", "pillow>=10", "pin==3.7.0", "pure-python-adb>=0.3.0.dev0", "pygame>=2.6", "pyqt6>=6.7", "pyrealsense2>=2.55", "pyspacemouse>=1.1", "ur-rtde>=1.6", "xarm-python-sdk>=1.14"]
 
 [project.scripts]
-gello = "gello.cli:main"
+agilex-gello-software = "agilex_gello_software.cli:main"
+gello = "agilex_gello_software.cli:main"
 
 [dependency-groups]
 dev = ["pytest>=8.3", "ruff>=0.9"]

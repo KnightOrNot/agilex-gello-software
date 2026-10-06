@@ -4,7 +4,7 @@ from typing import Tuple
 import numpy as np
 import tyro
 
-from gello.dynamixel.driver import DynamixelDriver
+from agilex_gello_software.dynamixel.driver import DynamixelDriver
 
 @dataclass
 class Args:

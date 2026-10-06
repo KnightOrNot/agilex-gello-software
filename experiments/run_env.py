@@ -1,8 +1,8 @@
-"""Compatibility wrapper for ``gello run-env``."""
+"""Compatibility wrapper for ``agilex-gello-software run-env``."""
 
 import tyro
 
-from gello.commands.run_env import Args, main
+from agilex_gello_software.commands.run_env import Args, main
 
 if __name__ == "__main__":
     raise SystemExit(main(tyro.cli(Args)))

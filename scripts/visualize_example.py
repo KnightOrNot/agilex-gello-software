@@ -2,7 +2,7 @@ import time
 import mujoco
 import mujoco.viewer
 
-from gello.paths import menagerie_root
+from agilex_gello_software.paths import menagerie_root
 
 
 def main():
