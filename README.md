@@ -1,211 +1,75 @@
 # agilex-gello-software
 
-仓库及安装包名称为 `agilex-gello-software`，Python 导入包为 `agilex_gello_software`。命令入口：`agilex-gello-software`（兼容短命令 `gello`）。
+基于 [wuphilipp/gello_software](https://github.com/wuphilipp/gello_software) 的 GELLO 库与通用实验工具。使用 Python 3.11、uv 和 src 包布局，保留主手读取、设备校准、机器人抽象及上游 YAM/ROS2/仿真工作流。
 
-`agilex-gello-software` 是 GELLO 主手的独立软件项目。本仓库在上游 GELLO 的基础上增加了七自由度状态读取、AgileX PiPER-X 遥操作、JS 定位和原始数据记录，并使用 uv 统一管理 Python、依赖、虚拟环境、锁文件和命令行入口。
+PiPER-X 项目的设备组合、ZMQ 客户端、JS 定位、跟随与 raw 录制已迁入 `agilex-controller`。库本身不依赖 controller、AgileX SDK 或 LeRobot。
 
-> [!WARNING]
-> `read` 只读取 GELLO，但 `follow`、`follow-record`、`movejs` 以及部分官方工作流会向真实机械臂发送命令。运行前必须固定设备、清空工作空间并确保急停按钮触手可及。
-
-
-## （1）项目能力
-
-- 通过 FTDI/Dynamixel Protocol 2.0 读取 GELLO J1～J6 与夹爪位置
-- 通过 ZMQ 连接 `agilex-sdk-python`，控制 PiPER-X 六轴与 AGX 夹爪
-- 以指定 `--hz` 运行跟随和原始 JSONL 数据记录
-- 支持上游 YAML、ZMQ、相机和 MuJoCo 工作流
-- 统一使用 `uv run agilex-gello-software COMMAND [OPTIONS]`，不再直接维护每个实验脚本的 Python 启动方式
-
-详细实现、参数含义和故障排查见[开发与调试手册](docs/DEVELOPMENT.md)，上游原始说明保存在[官方 README](docs/README_OFFICIAL.md)，该文件保留上游功能说明，仓库名称和安装路径已适配当前项目。
-
-## （2）环境要求
-
-- Ubuntu 22.04 或更新版本
-- Git、curl、USB 串口访问权限和基础编译工具
-- pyenv 和 Python 3.11；`.python-version` 声明项目版本
-- uv
-- GELLO 主手及 FTDI/Dynamixel 串口适配器
-- PiPER-X 功能额外需要独立的 `agilex-sdk-python` 服务与 USB-CAN
-- 仿真功能额外需要 MuJoCo Menagerie 资产 submodule
-
-## （3）快速开始
-
-### 1. 安装系统工具、pyenv 与 uv
-
-```bash
-sudo apt update
-sudo apt install -y git curl build-essential
-curl -LsSf https://astral.sh/uv/install.sh | sh
-source "$HOME/.local/bin/env"
-uv --version
-```
-
-### 2. 获取项目
-
-不使用仿真时，普通 clone 即可：
-
-```bash
-git clone git@github.com:KnightOrNot/agilex-gello-software.git
-cd agilex-gello-software
-```
-
-需要 MuJoCo 仿真时，一并拉取 Menagerie：
-
-```bash
-git clone --recurse-submodules git@github.com:KnightOrNot/agilex-gello-software.git
-cd agilex-gello-software
-```
-
-已经 clone 的仓库可在之后补充资产：
-
-```bash
-git submodule update --init --recursive
-```
-
-DynamixelSDK 已作为锁定的 uv/PyPI 依赖安装，不再需要手动 clone `third_party/DynamixelSDK`。
-
-### 3. 创建环境
-
-Python 由 pyenv 安装和选择，uv 负责 `.venv` 和依赖。基础 GELLO 与 PiPER-X 功能：
-
-```bash
-requested_version="$(<.python-version)"
-resolved_version="$(pyenv latest -k "$requested_version")"
-pyenv install -s "$resolved_version"
-interpreter="$(PYENV_VERSION="$resolved_version" pyenv which python)"
-UV_NO_MANAGED_PYTHON=1 uv sync --frozen --python "$interpreter"
-```
-
-按需安装可选功能：
-
-```bash
-uv sync --extra camera
-uv sync --extra simulation
-uv sync --extra robots
-uv sync --extra full
-```
-
-显式传递 pyenv 解释器并设置 `UV_NO_MANAGED_PYTHON=1`，可以防止 uv 自行下载 Python。`uv sync` 会根据 `uv.lock` 创建或更新 `.venv`，无需手动执行 `uv venv`、`uv pip install -e .` 或激活环境。日常命令统一通过 `uv run` 执行。
-
-### 4. 配置串口权限
-
-```bash
-sudo usermod -aG dialout "$USER"
-```
-
-注销并重新登录后，重新连接 GELLO，检查稳定设备路径和权限：
-
-```bash
-ls -l /dev/serial/by-id/
-test -r /dev/ttyUSB0 && test -w /dev/ttyUSB0 && echo "GELLO 权限正常"
-```
-
-推荐使用 `/dev/serial/by-id/...`，避免 `/dev/ttyUSB0` 随插拔顺序变化。
-
-### 5. 确认端口映射
-
-串口路径必须存在于 `src/agilex_gello_software/agents/gello_agent.py` 的 `PORT_CONFIG_MAP` 中。若设备路径不同，需要为实际硬件配置舵机 ID、offset、方向系数和夹爪端点；不要只替换未知串口路径后直接启动机械臂。
-
-### 6. 只读验证 GELLO
-
-```bash
-uv run agilex-gello-software read \
-  --gello-port /dev/serial/by-id/usb-FTDI_USB__-__Serial_Converter_FTBM4Z46-if00-port0
-```
-
-机器可读输出：
-
-```bash
-uv run agilex-gello-software read \
-  --gello-port /dev/serial/by-id/usb-FTDI_USB__-__Serial_Converter_FTBM4Z46-if00-port0 \
-  --json
-```
-
-## （4）命令行入口
-
-查看所有命令：
-
-```bash
-uv run agilex-gello-software --help
-uv run agilex-gello-software follow --help
-```
-
-| 命令 | 功能 | 依赖范围 |
-| --- | --- | --- |
-| `read` | 读取 GELLO 关节和夹爪 | 基础 |
-| `follow` | GELLO 控制 PiPER-X | 基础 |
-| `follow-record` | 跟随并记录原始 episode | 基础 |
-| `movejs` | 通过 PiPER-X ZMQ/JS 定位 | 基础 |
-| `launch-yaml` | 从 YAML 启动工作流 | 基础或配置对应 extra |
-| `launch-nodes` | 启动机器人 ZMQ 服务 | `robots` |
-| `camera-server`、`camera-client` | RealSense 服务和显示 | `camera` |
-| `quick-run`、`run-env` | 上游通用工作流 | `full` |
-
-`experiments/*.py` 暂时保留为兼容包装器，现有外部脚本仍可运行；新增使用和开发统一面向 `agilex-gello-software` CLI。
-
-## （5）PiPER-X 最小联调
-
-终端 1 启动 `agilex-sdk-python` 服务：
-
-```bash
-cd /path/to/agilex-sdk-python
-./scripts/config_can.sh
-uv run agilex-sdk-python status
-uv run agilex-sdk-python-server --hz 50
-```
-
-终端 2 启动 GELLO 客户端：
-
-```bash
-cd /path/to/agilex-gello-software
-uv run agilex-gello-software follow \
-  --gello-port /dev/serial/by-id/usb-FTDI_USB__-__Serial_Converter_FTBM4Z46-if00-port0 \
-  --start-joints 0 0 0 0 0 0 \
-  --hz 50
-```
-
-示例中的零位不能直接用于未知姿态。必须先理解启动对齐和 `--start-joints`，具体步骤见[开发与调试手册](docs/DEVELOPMENT.md)。
-
-## （6）开发检查
-
-```bash
-uv sync --dev
-uv run pytest -q
-uv run ruff check src/agilex_gello_software/cli.py src/agilex_gello_software/paths.py tests experiments
-```
-
-## （7）常见问题
-
-### 1. `ModuleNotFoundError: dynamixel_sdk`
-
-确保命令在项目根目录通过 uv 执行，并恢复锁定环境：
+## 安装
 
 ```bash
 uv sync --frozen
-uv run python -c "import dynamixel_sdk; print(dynamixel_sdk.__file__)"
+uv run agilex-gello-software --help
+uv run pytest
 ```
 
-### 2. 串口存在但没有权限
+基础依赖只满足主手和基础工具。需要上游可选功能时安装相应 extra：
 
 ```bash
-groups
-ls -l /dev/serial/by-id/
+uv sync --extra simulation
+uv sync --extra robots
+uv sync --extra camera
 ```
 
-加入 `dialout` 后必须注销并重新登录。
+`full` 包含全部可选依赖。仿真模型仍需按上游说明单独初始化，普通主手读取不需要下载。
 
-### 3. 串口被占用
+## Python 接口
 
-同一时间只能有一个程序访问 GELLO 串口：
+应用可以沿用上游 `GelloAgent`，显式传入自己的 `DynamixelRobotConfig`：
 
-```bash
-lsof /dev/serial/by-id/usb-FTDI_USB__-__Serial_Converter_FTBM4Z46-if00-port0
+```python
+from agilex_gello_software.agents.gello_agent import GelloAgent
+
+# device_config 是当前设备经过验证的 DynamixelRobotConfig。
+agent = GelloAgent(port=port, dynamixel_config=device_config, start_joints=start_joints)
+try:
+    joints = agent.act({})
+finally:
+    agent.close()
 ```
 
-### 4. 找不到 MuJoCo Menagerie
+设备配置只描述电机 ID、offset、方向和夹爪端点。应用自行决定如何映射到从臂、如何发送命令及如何记录数据。真实驱动初始化失败会显式报错；初始化异常和正常退出均释放串口。
 
-```bash
-git submodule update --init --recursive
-```
+`PORT_CONFIG_MAP` 保留上游示例设备。当前 PiPER-X 安装的 FTBM4Z46 标定移到了 controller 的 `config/default.toml`，通过显式配置传入，不再占用库的 YAM 示例配置。
 
-也可以通过 `GELLO_MENAGERIE_ROOT=/absolute/path/to/mujoco_menagerie` 使用外部资产目录。
+## 独立命令
+
+| 命令 | 用途 |
+| --- | --- |
+| `read` | 使用库端口表只读 GELLO |
+| `launch-yaml` | 上游 YAML 工作流 |
+| `launch-nodes` | 上游机器人服务 |
+| `camera-server` / `camera-client` | 上游相机实验工具 |
+| `quick-run` / `run-env` | 上游通用环境与演示 |
+
+具体参数执行 `uv run agilex-gello-software COMMAND --help`。部分命令会控制真实设备或需要 extra；按上游文档准备硬件。
+
+## PiPER-X 命令迁移
+
+在 controller 根目录使用：
+
+| 原入口 | 新入口 |
+| --- | --- |
+| `agilex-gello-software follow` | `uv run agilex-controller follow` |
+| `agilex-gello-software follow-record` | `uv run agilex-controller record` |
+| `agilex-gello-software movejs` | `uv run agilex-controller movejs` |
+| 当前安装的主手读取 | `uv run agilex-controller read --json` |
+
+PiPER-X 专用实验包装和 raw recorder 已移出；默认频率、映射、采集与安全退出以 controller 文档为准。
+
+## 维护与来源
+
+- [开发指南](docs/DEVELOPMENT.md)
+- [上游差异说明](docs/UPSTREAM.md)
+- [保留的上游 README](docs/README_OFFICIAL.md)
+- [ROS2 文档](ros2/README.md)
+- [MIT License](LICENSE)

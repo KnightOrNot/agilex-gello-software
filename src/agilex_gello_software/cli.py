@@ -19,11 +19,6 @@ class Command:
 
 COMMANDS: dict[str, Command] = {
     "read": Command("agilex_gello_software.commands.read", "read GELLO joints and gripper"),
-    "follow": Command("agilex_gello_software.commands.follow", "control PiPER-X with GELLO"),
-    "follow-record": Command(
-        "agilex_gello_software.commands.follow_record", "control PiPER-X and record raw episodes"
-    ),
-    "movejs": Command("agilex_gello_software.commands.movejs", "move PiPER-X through its JS channel"),
     "launch-yaml": Command(
         "agilex_gello_software.commands.launch_yaml", "launch from a YAML configuration", "tyro"
     ),

@@ -1,7 +1,7 @@
 [project]
 name = "agilex-gello-software"
 version = "0.1.0"
-description = "GELLO teleoperation and PiPER-X data collection software"
+description = "Reusable GELLO input, calibration, and upstream teleoperation tools"
 readme = "README.md"
 requires-python = ">=3.11,<3.12"
 license = { file = "LICENSE" }
