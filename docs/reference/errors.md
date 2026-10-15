@@ -2,14 +2,25 @@
 
 | 现象 | 检查与处理 |
 | --- | --- |
-| `unknown GELLO port` | 独立 `read` 只识别库端口表。PiPER-X 使用 controller 的 `read`；新应用显式传入校准 |
-| 串口被占用 / 权限不足 | 检查稳定的 by-id 路径、`dialout` 和占用进程；先停止持有设备的程序 |
-| 无首帧、连续通信失败或状态陈旧 | 检查供电、USB、串联线、ID、波特率。不要用 fake 状态替代真实失败后继续控制 |
-| 关节方向或夹爪端点不符 | 核对 offset 单位、sign、端点度数及应用主从映射；先只读验证 |
-| `missing optional dependency` | 用 `uv sync --frozen --extra EXTRA` 安装命令所需 extra；外部机器人 SDK 另行准备 |
-| 找不到 Menagerie 或配置资源 | 初始化 submodule，或设置 `GELLO_PROJECT_ROOT` / `GELLO_MENAGERIE_ROOT` |
-| `follow` / `follow-record` / `movejs` 未知命令 | 使用 controller 统一入口，见 [CLI 参考](cli.md) |
+| 找不到本地 DynamixelSDK source | 初始化 `third_party/DynamixelSDK` 后重新 `uv sync --frozen`；当前验收工作树已检出 |
+| `import gello` 失败 | 重新同步当前 pyproject；构建必须同时提供 gello 与本地 src，不能只拷贝 src |
+| 独立 read 提示未知串口 | 它使用上游表；PiPER-X 用 controller 的 read，或在应用中显式传校准 |
+| 串口忙、无权限、首次读取超时 | 停止占用程序，检查 dialout、供电、接线、ID 与波特率；本地入口不自动杀进程/改权限 |
+| 反馈陈旧、连续失败或字段不完整 | 本地适配拒绝继续返回缓存，排查真实通信，不要用 fake fallback 掩盖失败 |
+| 上游完整性校验失败 | 按报错文件对比固定基线；业务修改移到 src，升级上游需同时更新清单 |
+| 通用脚本缺依赖或模型 | 同步相应 extra、初始化 Menagerie，并按上游说明准备外部 SDK |
+| 通用脚本找不到相对 YAML/URDF | CLI 在 GELLO checkout 根目录执行，传正确相对路径或绝对路径 |
+| close 不存在或仍有原生 fake 行为 | 检查导入是否为本地 `agilex_gello_software.*`；原生 `gello.*` 没有被全局修改 |
 
-当前非 ROS 驱动的 `get_joints()` 有首帧等待、连续错误与陈旧状态检查；其他读取接口不能据此推定都有相同超时。退出应由持有实例的应用调用 `close()`，不要依赖进程退出回收串口。
+## 验证依赖来源
 
-报告问题时附 Python/依赖版本、CLI、设备类型、脱敏端口、完整错误和复现步骤，说明使用真实硬件还是模拟驱动。普通回归运行 `uv run --frozen pytest`；不要为排障直接运行源码目录中的硬件测试脚本。
+在本库目录执行：
+
+```bash
+uv run python -c "import dynamixel_sdk; from importlib.metadata import version; print(version('dynamixel-sdk')); print(dynamixel_sdk.__file__)"
+uv run python -m agilex_gello_software.upstream
+```
+
+SDK 版本应为 3.7.51，来源为本 checkout 的 `third_party/DynamixelSDK/python/src/`。controller 环境也应解析到同一份 SDK。不要手动在某个 `.venv` 中替换版本后继续使用旧锁文件。
+
+原生上游驱动保留原行为；本地保护只作用于本地入口。报告问题时附提交/待验收状态、导入路径、CLI、依赖来源、标定和完整错误。默认 pytest 不访问设备；实机验证与软件回归分开记录。

@@ -50,23 +50,25 @@ operating_modes:
 ### Regular Driver
 
 ```python
-from agilex_gello_software.dynamixel.driver import DynamixelDriver
+from gello.dynamixel.driver import DynamixelDriver
 try:
   driver = DynamixelDriver(
       ids=[1, 2, 3], 
       port="/dev/ttyUSB0", 
       baudrate=57600, 
       motor_type="xl330"
-  )
+    )
 except ConnectionError as e:
   print(f"Error initializing DynamixelDriver: {e}")
   return
 ```
 
+Host serial baudrate is passed by the caller (ROS `baudrate` param / YAML). Factory XL330 chains use 57600. Allowed values: 57600, 115200, 1000000 (control-table register 1 / 2 / 3). The GELLO publisher scans these rates on init and may SyncWrite EEPROM `baud_rate` when YAML requests a different allowed baud.
+
 ### Fake Driver for Testing
 
 ```python
-from agilex_gello_software.dynamixel.driver import FakeDynamixelDriver
+from gello.dynamixel.driver import FakeDynamixelDriver
 
 fake_driver = FakeDynamixelDriver(ids=[1, 2, 3], motor_type="xl330")
 ```

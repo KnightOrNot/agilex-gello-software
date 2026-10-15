@@ -1,35 +1,43 @@
 # 架构与数据流
 
-## 库的边界
+## 上游与本地适配
 
 ```mermaid
 flowchart LR
-    D[Dynamixel 串口] --> R[驱动与设备校准]
-    R --> A[GelloAgent.act]
-    A --> C[应用：映射、发送与录制]
+    SDK[固定版本 DynamixelSDK] --> U[原生 gello 包]
+    U --> A[src：继承与生命周期适配]
+    A --> C[controller：映射、跟随、raw]
+    C --> L[converter：时间轴与 LeRobot]
 ```
 
-`DynamixelDriver` 负责电机通信与读取线程；`DynamixelRobot` 应用 offset、方向、夹爪归一化和起始多圈参考；`GelloAgent` 提供上游 `act(obs)` 接口。应用拥有实例，必须调用 `close()`。真实模式在驱动或初始化失败时上报错误并释放已创建资源。
+`gello.*` 是原始上游命名空间。`agilex_gello_software.*` 是本地扩展，两者由同一个 uv 项目安装。上游脚本、配置和 ROS2 不再改用本地包名；它们继续按上游路径工作。`uv build` 使用 Hatchling 将 `gello/` 与 `src/agilex_gello_software/` 同时打包。
 
-PiPER-X 应用在 controller 中组合本库和 SDK，并记录 raw；converter 独立处理时间对齐和 LeRobot 输出。库不导入这两个项目。`commands/` 中保留的通用上游实验仍可以自行创建机器人与相机节点；它们不是 PiPER-X 的入口。
+本地 `GelloAgent` 继承原生 agent 的 `act()`，配置适配器注入本地 robot；robot 继承原生状态映射、夹爪归一化和滤波，替换驱动并保留多圈参考对齐。驱动继承原生命令协议，只在 `src/` 管理初始化、串口策略、反馈读取和关闭。不替换原生模块或全局类。
 
-## 配置与资源
+## 运行边界
 
-新应用显式创建 `DynamixelRobotConfig`。库独立 `read` 使用 `PORT_CONFIG_MAP`；YAML 工具使用 `configs/`。三种配置来源不会自动同步。本机 PiPER-X 校准以 controller 的 TOML 为准。
+| 入口 | 行为 |
+| --- | --- |
+| 本地 `agilex-gello-software read` | 真实读取、库端口表、失败上报、结束后关闭 |
+| controller 的 read/follow/record | 应用 TOML 校准、本地适配、主从映射与完整退出流程 |
+| 本地 CLI 的通用命令 | 转发原始 `experiments/`，切换到 checkout 根目录解析相对资源 |
+| 直接 `gello.*` 或上游脚本 | 原生上游行为，不自动使用本地驱动保护 |
 
-仿真和 FACTR 使用源码 checkout 中的模型、配置和 URDF。wheel 安装不会代替资源 checkout；使用 `GELLO_PROJECT_ROOT` 和 `GELLO_MENAGERIE_ROOT` 指向资源。
+原生驱动保留其自动处理占用串口、fake fallback 和等待策略。本地驱动禁用 fake fallback，不自动杀进程/改权限；首帧等待默认 3 秒，缓存超过 1 秒拒绝返回，连续 10 次通信失败或缺少完整反馈会报错。读取周期等待为 0.01 秒，不代表实际采样率。
 
-## 文档导航
+本地关闭会停止线程，等待最多 2 秒后关闭串口，必要时再等待 1 秒；仍未停止时报错。应用必须调用 `close()`，初始化失败也释放已获得的资源。
 
+## 配置与文档
+
+controller 的设备校准不写入上游端口表。已有本机生成 YAML 与 arena 迁入 `src/agilex_gello_software/configs/legacy/` 作历史参考；原始 `configs/` 与上游相同。通用实验的数据格式不是 controller raw v1。
+
+- [当前项目快速开始](../README.md)
 - [安装](installation.md)
 - [CLI](reference/cli.md)
-- [设备配置](reference/config.md)
+- [配置](reference/config.md)
 - [排障](reference/errors.md)
 - [贡献指南](../CONTRIBUTING.md)
-- [上游差异](UPSTREAM.md)
-- [上游说明存档](OFFICIAL.md)
-- [ROS2](../ros2/README.md)
+- [上游基线与审计](UPSTREAM.md)
+- [上游开发说明](OFFICIAL.md)
 
-## 来源与许可
-
-GELLO 来源为 [wuphilipp/gello_software](https://github.com/wuphilipp/gello_software)，保留 [MIT 许可与 Philipp Wu 版权声明](../LICENSE)。FACTR 部分来源于 [factr_teleop](https://github.com/RaindragonD/factr_teleop/)，其 Apache-2.0 来源说明保留在上游说明存档中。MuJoCo Menagerie、ROS2 子组件和依赖适用各自许可；发布时保留相应声明，不将仓库 MIT 文本视为这些组件的替代许可。
+保留 [MIT 版权](../LICENSE)。DynamixelSDK 使用其 [Apache-2.0 许可](../third_party/DynamixelSDK/LICENSE)，FACTR、ROS2 与模型继续适用对应组件许可；完整来源保留在上游说明中。

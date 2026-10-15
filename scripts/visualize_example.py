@@ -1,12 +1,13 @@
 import time
+from pathlib import Path
+
 import mujoco
 import mujoco.viewer
 
-from agilex_gello_software.paths import menagerie_root
-
 
 def main():
-    _MENAGERIE_ROOT = menagerie_root()
+    _PROJECT_ROOT: Path = Path(__file__).parent.parent
+    _MENAGERIE_ROOT: Path = _PROJECT_ROOT / "third_party" / "mujoco_menagerie"
     xml = _MENAGERIE_ROOT / "franka_emika_panda" / "panda.xml"
 
     # xml = _MENAGERIE_ROOT / "universal_robots_ur5e" / "ur5e.xml"

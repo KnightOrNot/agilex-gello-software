@@ -1,10 +1,18 @@
+import os
+import sys
 from dataclasses import dataclass
+from pathlib import Path
 from typing import Tuple
 
 import numpy as np
 import tyro
 
-from agilex_gello_software.dynamixel.driver import DynamixelDriver
+from gello.dynamixel.driver import DynamixelDriver
+
+sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
+
+MENAGERIE_ROOT: Path = Path(__file__).parent / "third_party" / "mujoco_menagerie"
+
 
 @dataclass
 class Args:

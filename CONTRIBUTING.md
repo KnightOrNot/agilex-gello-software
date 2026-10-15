@@ -1,57 +1,50 @@
 # 贡献指南
 
-## 责任边界
+## 环境与目录边界
 
-本库提供主手/电机读取、设备级校准和上游通用框架。PiPER-X 特定的客户端组合、主从方向、跟随启动、退出和 raw 数据录制属于 controller。不要将 controller 或数据转换器作为本库的依赖。
+使用 Python 3.11、uv 和本仓库独立 `.venv`。先初始化 `third_party/DynamixelSDK`，再 `uv sync --frozen`。解释器与可选依赖见[安装指南](docs/installation.md)。
 
-保留的关键模块：
+`gello/`、`experiments/`、`scripts/`、`configs/`、`ros2/`、上游硬件资料和两个第三方版本以 [UPSTREAM.md](docs/UPSTREAM.md) 为准。不要在这些原文件中加入本机校准、改导入名或修复业务行为；新适配写入 `src/agilex_gello_software/`。README 和本地 docs 可以说明 fork，uv/Python 管理文件按项目维护。
 
-| 路径 | 用途 |
+| 本地模块 | 责任 |
 | --- | --- |
-| `src/agilex_gello_software/agents/gello_agent.py` | GelloAgent 与 DynamixelRobotConfig |
-| `robots/dynamixel.py` | 电机状态、offset/方向、夹爪归一化 |
-| `dynamixel/driver.py` | 真实/模拟驱动、通信与读取线程 |
-| `commands/read.py` | 库自身的独立只读 CLI |
-| `commands/` 其他模块 | 上游通用实验入口 |
-| `configs/`、`ros2/`、`experiments/` | 上游配置与实验 |
+| `agents/gello_agent.py` | 上游 agent 的显式校准与 close 适配 |
+| `robots/dynamixel.py` | 注入本地真实驱动，复用上游状态映射与滤波 |
+| `dynamixel/driver.py` | 继承上游命令协议，管理真实初始化、反馈时效与关闭 |
+| `cli.py`、`commands/read.py` | 本地读取与原脚本转发 |
+| `paths.py`、`upstream.py`、`upstream.json` | checkout 资源与离线完整性校验 |
 
-新项目优先通过 `dynamixel_config=` 传入校准；不要为了一个端口改动上游示例。校准值和面向具体从臂的映射应分开管理。主手夹爪归一化端点与从臂开口含义应由应用明确约定。
+controller 持有主手、客户端和 raw；converter 处理对齐/数据转换。校准从应用经 `DynamixelRobotConfig` 传入，保留上游端口表不变。不要用全局 monkey patch 改写 `gello.*`。
 
-## 上游同步
+## 风格与回归
 
-[上游仓库](https://github.com/wuphilipp/gello_software) 的 API 与总体结构是兼容基线。保持已存在的包命名和 uv 适配，避免顺带重写通用模块。具体保留的本地差异见 [UPSTREAM.md](docs/UPSTREAM.md)。
-
-controller 当前通过显式设备配置和 `GelloAgent.act()/close()` 使用库；上游没有 `close()` 的版本需要保留对应最小生命周期扩展。
-
-真实模式不应因初始化失败而返回假状态。初始化中断、torque 设置失败或起始角度选择失败时必须关闭已创建驱动；正常 close 需停止读取线程并释放串口。现有通信错误/陈旧反馈检查应保留。
-
-## 环境与检查
-
-在本仓库目录执行：
+本地 Python 使用四空格、公开接口类型标注、`snake_case` 函数/模块和 `PascalCase` 类，运行 Ruff 检查与格式化。测试命名 `tests/test_*.py`，没有覆盖率门槛。
 
 ```bash
-uv sync --frozen
 uv run --frozen pytest
-uv run --frozen ruff check src tests experiments scripts --select E9,F63,F7,F82
+uv run --frozen ruff check src tests
+uv run --frozen ruff format --check src tests
+uv run --frozen ruff check gello experiments scripts --select E9,F63,F7,F82
+uv run --frozen python -m agilex_gello_software.upstream
 uv build
 ```
 
-上游文件保留其已有风格；新增测试和独立小模块可用 Ruff 做完整检查，避免混入全库格式化。测试使用模拟驱动，不打开真实串口。
+只格式化 `src/` 和本地 tests，保留原始上游排版。默认 pytest 不收集 `gello/dynamixel/tests/` 的真实串口诊断。通过 fake SDK 的真实读取线程测试失败、超时、符号/单位和资源清理，并与原生 fake robot 对比校准、多圈参考、夹爪和滤波。
 
-独立 `read` 命令从库的 `PORT_CONFIG_MAP` 查找配置；controller 的 `read` 使用 controller TOML。两者配置来源不同，当前 PiPER-X 安装应使用 controller 入口。
+硬件初始化不能杀占用串口的进程、改权限或返回 fake 状态继续控制；构造失败和退出需释放已获得资源。测试不移动设备。实机验证需要操作员确认，并明确记录设备、固件、标定及结果。
 
-## 多仓库联调
+修改适配或依赖后，在 controller 根目录运行 `uv run --frozen pytest`，验证跟随应用、raw、信号清理和真实 converter 往返；不要把这些软件回归写成实机验收。
 
-工作区中的独立 `agilex-gello-software/` checkout 与 `agilex-controller/agilex-gello-software/` submodule 是两个工作副本。先测试并发布本库提交，再更新 controller 的 submodule 指针。controller 环境通过本地 editable 路径导入它包含的那份 submodule；修改独立工作副本不会自动改变 controller 的导入内容。
+## 上游同步与构建
 
-应用集成检查在 controller 根目录执行 `uv run pytest`。raw schema 和转换回归由 controller/converter 维护；库不再包含 PiPER-X raw 录制测试。
+完整性清单固定上游提交、169 个文件和两个第三方提交；README、uv CI、忽略规则是声明过的例外。同步上游时在独立临时 checkout 对比，更新原文件及清单，再验证本地适配。原始 `setup.py`/requirements 保留作上游内容，当前安装以 pyproject 和 uv.lock 为准。
 
-## 风格、测试与提交
+`uv build` 通过 Hatchling 打包两个命名空间。wheel 不含完整实验 checkout；通用脚本需 `GELLO_PROJECT_ROOT` 或 editable checkout。sdist 包含 SDK Python 源与许可，实际开发依赖仍以 uv 的本地 SDK source 为准。
 
-Python 使用四空格缩进；新公开接口添加类型标注，函数/模块用 `snake_case`，类用 `PascalCase`。保留上游文件已有排版。历史 pre-commit 配置包含 Black、isort、flake8；当前 Python CI 使用上面的 Ruff 基础规则，不要求全库 Ruff 格式化。
+## 提交与文档
 
-测试文件使用 `tests/test_*.py`，没有覆盖率门槛。为读取错误、陈旧反馈、初始化失败与资源释放增加针对性测试；默认 pytest 不收集 `src/` 下需要设备的诊断脚本。真实硬件验证需操作员确认，PR 中写明设备、检查步骤和结果。
+优先使用 `fix:`、`refactor:`、`docs:` 等简洁祈使式主题。PR 说明最终行为、上游文件是否变化、依赖和应用兼容性、检查、实机验证状态及 issue。更新本地 README、参考文档、CHANGELOG；上游说明保留在 `docs/OFFICIAL.md`。
 
-提交主题优先使用简洁祈使句和 `fix:`、`refactor:`、`docs:` 等前缀。PR 说明最终行为、上游兼容性、依赖/配置变化、测试结果及硬件验证状态，并关联相关 issue。不要提交 `.venv`、缓存、`*.egg-info`、采集数据或生成的构建产物。
+独立 checkout 与 controller submodule 不会自动同步。遵循用户先验收再提交的要求；验收后提交本库、发布其版本，再更新 controller gitlink。恢复 DynamixelSDK 时需同时记录 `.gitmodules` 和 `third_party/DynamixelSDK` 的 gitlink，不能把 SDK 源码展开提交进主仓库。
 
-参数或行为变化时同步更新 README、`docs/reference/`、CHANGELOG 和相关测试。保留硬件图片、ROS2 资料和上游版权声明；新增第三方代码需记录来源与许可。
+不要提交环境、缓存、数据和构建产物；保留 MIT 及第三方声明。已有生成 YAML/arena 已迁到 `src/agilex_gello_software/configs/legacy/` 仅作历史参考，不能当作当前设备的默认标定。

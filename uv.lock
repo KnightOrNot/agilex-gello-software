@@ -12,6 +12,102 @@ wheels = [
 ]
 
 [[package]]
+name = "agilex-gello-software"
+version = "0.1.0"
+source = { editable = "." }
+dependencies = [
+    { name = "dynamixel-sdk" },
+    { name = "numpy" },
+    { name = "omegaconf" },
+    { name = "pyyaml" },
+    { name = "pyzmq" },
+    { name = "termcolor" },
+    { name = "tyro" },
+]
+
+[package.optional-dependencies]
+camera = [
+    { name = "pillow" },
+    { name = "pyrealsense2" },
+]
+full = [
+    { name = "dm-control" },
+    { name = "mujoco" },
+    { name = "numpy-quaternion" },
+    { name = "pillow" },
+    { name = "pin" },
+    { name = "pure-python-adb" },
+    { name = "pygame" },
+    { name = "pyqt6" },
+    { name = "pyrealsense2" },
+    { name = "pyspacemouse" },
+    { name = "ur-rtde" },
+    { name = "xarm-python-sdk" },
+]
+robots = [
+    { name = "pure-python-adb" },
+    { name = "pyspacemouse" },
+    { name = "ur-rtde" },
+    { name = "xarm-python-sdk" },
+]
+simulation = [
+    { name = "dm-control" },
+    { name = "mujoco" },
+    { name = "numpy-quaternion" },
+    { name = "pin" },
+    { name = "pygame" },
+    { name = "pyqt6" },
+]
+
+[package.dev-dependencies]
+dev = [
+    { name = "pytest" },
+    { name = "ruff" },
+]
+
+[package.metadata]
+requires-dist = [
+    { name = "dm-control", marker = "extra == 'full'", specifier = ">=1.0.20" },
+    { name = "dm-control", marker = "extra == 'simulation'", specifier = ">=1.0.20" },
+    { name = "dynamixel-sdk", editable = "third_party/DynamixelSDK/python" },
+    { name = "mujoco", marker = "extra == 'full'", specifier = ">=3.2" },
+    { name = "mujoco", marker = "extra == 'simulation'", specifier = ">=3.2" },
+    { name = "numpy", specifier = ">=1.26" },
+    { name = "numpy-quaternion", marker = "extra == 'full'", specifier = ">=2024.0" },
+    { name = "numpy-quaternion", marker = "extra == 'simulation'", specifier = ">=2024.0" },
+    { name = "omegaconf", specifier = "==2.3.0" },
+    { name = "pillow", marker = "extra == 'camera'", specifier = ">=10" },
+    { name = "pillow", marker = "extra == 'full'", specifier = ">=10" },
+    { name = "pin", marker = "extra == 'full'", specifier = "==3.7.0" },
+    { name = "pin", marker = "extra == 'simulation'", specifier = "==3.7.0" },
+    { name = "pure-python-adb", marker = "extra == 'full'", specifier = ">=0.3.0.dev0" },
+    { name = "pure-python-adb", marker = "extra == 'robots'", specifier = ">=0.3.0.dev0" },
+    { name = "pygame", marker = "extra == 'full'", specifier = ">=2.6" },
+    { name = "pygame", marker = "extra == 'simulation'", specifier = ">=2.6" },
+    { name = "pyqt6", marker = "extra == 'full'", specifier = ">=6.7" },
+    { name = "pyqt6", marker = "extra == 'simulation'", specifier = ">=6.7" },
+    { name = "pyrealsense2", marker = "extra == 'camera'", specifier = ">=2.55" },
+    { name = "pyrealsense2", marker = "extra == 'full'", specifier = ">=2.55" },
+    { name = "pyspacemouse", marker = "extra == 'full'", specifier = ">=1.1" },
+    { name = "pyspacemouse", marker = "extra == 'robots'", specifier = ">=1.1" },
+    { name = "pyyaml", specifier = ">=6.0" },
+    { name = "pyzmq", specifier = ">=26.0" },
+    { name = "termcolor", specifier = ">=2.4" },
+    { name = "tyro", specifier = ">=0.9" },
+    { name = "ur-rtde", marker = "extra == 'full'", specifier = ">=1.6" },
+    { name = "ur-rtde", marker = "extra == 'robots'", specifier = ">=1.6" },
+    { name = "xarm-python-sdk", marker = "extra == 'full'", specifier = ">=1.14" },
+    { name = "xarm-python-sdk", marker = "extra == 'robots'", specifier = ">=1.14" },
+]
+provides-extras = ["camera", "simulation", "robots", "full"]
+
+[package.metadata.requires-dev]
+dev = [
+    { name = "pytest", specifier = ">=8.3" },
+    { name = "ruff", specifier = ">=0.9" },
+]
+
+[[package]]
 name = "antlr4-python3-runtime"
 version = "4.9.3"
 source = { registry = "https://pypi.org/simple" }
@@ -359,15 +455,14 @@ wheels = [
 
 [[package]]
 name = "dynamixel-sdk"
-version = "4.0.5"
-source = { registry = "https://pypi.org/simple" }
+version = "3.7.51"
+source = { editable = "third_party/DynamixelSDK/python" }
 dependencies = [
     { name = "pyserial" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/de/ad/05bb6c7fe54c01d2712398872b300891a5b6a0181e69335f4e1717d72805/dynamixel_sdk-4.0.5.tar.gz", hash = "sha256:498ba2090f5f9844ac0610553cc70b8c79e3f6f52f7911425cdb2857210b9630", size = 29695, upload-time = "2026-05-06T02:12:08.389Z" }
-wheels = [
-    { url = "https://files.pythonhosted.org/packages/52/a5/319d15afd31997e54e5c88b2fe1d53d15c9e63c3b8d51eda40ddff629443/dynamixel_sdk-4.0.5-py3-none-any.whl", hash = "sha256:36f9c0c078cbb8e87f5413bfcf76da8f50ce07d17690c52e52ad0f0180a7d6d8", size = 103493, upload-time = "2026-05-06T02:12:06.77Z" },
-]
+
+[package.metadata]
+requires-dist = [{ name = "pyserial" }]
 
 [[package]]
 name = "easyhid"
@@ -417,102 +512,6 @@ source = { registry = "https://pypi.org/simple" }
 sdist = { url = "https://files.pythonhosted.org/packages/00/78/f34251dadb8f3921264a1d9b8946f5e542014ee2614b285261b4e40e6775/fsspec-2026.7.0.tar.gz", hash = "sha256:c803c40f4cf860b49dea58ee3e1c33cb9c790520e233537e1340049f89b82a88", size = 317040, upload-time = "2026-07-28T16:34:51.052Z" }
 wheels = [
     { url = "https://files.pythonhosted.org/packages/fd/3c/6a2bf344106328fd04963664a60b9bb6496fc25df8e962fcdc1367285fb9/fsspec-2026.7.0-py3-none-any.whl", hash = "sha256:b57ddbafedfaef7018c1ecab32aa200a9d7ca26b77965f64e48b70061249d279", size = 206583, upload-time = "2026-07-28T16:34:49.538Z" },
-]
-
-[[package]]
-name = "agilex-gello-software"
-version = "0.1.0"
-source = { editable = "." }
-dependencies = [
-    { name = "dynamixel-sdk" },
-    { name = "numpy" },
-    { name = "omegaconf" },
-    { name = "pyyaml" },
-    { name = "pyzmq" },
-    { name = "termcolor" },
-    { name = "tyro" },
-]
-
-[package.optional-dependencies]
-camera = [
-    { name = "pillow" },
-    { name = "pyrealsense2" },
-]
-full = [
-    { name = "dm-control" },
-    { name = "mujoco" },
-    { name = "numpy-quaternion" },
-    { name = "pillow" },
-    { name = "pin" },
-    { name = "pure-python-adb" },
-    { name = "pygame" },
-    { name = "pyqt6" },
-    { name = "pyrealsense2" },
-    { name = "pyspacemouse" },
-    { name = "ur-rtde" },
-    { name = "xarm-python-sdk" },
-]
-robots = [
-    { name = "pure-python-adb" },
-    { name = "pyspacemouse" },
-    { name = "ur-rtde" },
-    { name = "xarm-python-sdk" },
-]
-simulation = [
-    { name = "dm-control" },
-    { name = "mujoco" },
-    { name = "numpy-quaternion" },
-    { name = "pin" },
-    { name = "pygame" },
-    { name = "pyqt6" },
-]
-
-[package.dev-dependencies]
-dev = [
-    { name = "pytest" },
-    { name = "ruff" },
-]
-
-[package.metadata]
-requires-dist = [
-    { name = "dm-control", marker = "extra == 'full'", specifier = ">=1.0.20" },
-    { name = "dm-control", marker = "extra == 'simulation'", specifier = ">=1.0.20" },
-    { name = "dynamixel-sdk", specifier = "==4.0.5" },
-    { name = "mujoco", marker = "extra == 'full'", specifier = ">=3.2" },
-    { name = "mujoco", marker = "extra == 'simulation'", specifier = ">=3.2" },
-    { name = "numpy", specifier = ">=1.26" },
-    { name = "numpy-quaternion", marker = "extra == 'full'", specifier = ">=2024.0" },
-    { name = "numpy-quaternion", marker = "extra == 'simulation'", specifier = ">=2024.0" },
-    { name = "omegaconf", specifier = "==2.3.0" },
-    { name = "pillow", marker = "extra == 'camera'", specifier = ">=10" },
-    { name = "pillow", marker = "extra == 'full'", specifier = ">=10" },
-    { name = "pin", marker = "extra == 'full'", specifier = "==3.7.0" },
-    { name = "pin", marker = "extra == 'simulation'", specifier = "==3.7.0" },
-    { name = "pure-python-adb", marker = "extra == 'full'", specifier = ">=0.3.0.dev0" },
-    { name = "pure-python-adb", marker = "extra == 'robots'", specifier = ">=0.3.0.dev0" },
-    { name = "pygame", marker = "extra == 'full'", specifier = ">=2.6" },
-    { name = "pygame", marker = "extra == 'simulation'", specifier = ">=2.6" },
-    { name = "pyqt6", marker = "extra == 'full'", specifier = ">=6.7" },
-    { name = "pyqt6", marker = "extra == 'simulation'", specifier = ">=6.7" },
-    { name = "pyrealsense2", marker = "extra == 'camera'", specifier = ">=2.55" },
-    { name = "pyrealsense2", marker = "extra == 'full'", specifier = ">=2.55" },
-    { name = "pyspacemouse", marker = "extra == 'full'", specifier = ">=1.1" },
-    { name = "pyspacemouse", marker = "extra == 'robots'", specifier = ">=1.1" },
-    { name = "pyyaml", specifier = ">=6.0" },
-    { name = "pyzmq", specifier = ">=26.0" },
-    { name = "termcolor", specifier = ">=2.4" },
-    { name = "tyro", specifier = ">=0.9" },
-    { name = "ur-rtde", marker = "extra == 'full'", specifier = ">=1.6" },
-    { name = "ur-rtde", marker = "extra == 'robots'", specifier = ">=1.6" },
-    { name = "xarm-python-sdk", marker = "extra == 'full'", specifier = ">=1.14" },
-    { name = "xarm-python-sdk", marker = "extra == 'robots'", specifier = ">=1.14" },
-]
-provides-extras = ["camera", "simulation", "robots", "full"]
-
-[package.metadata.requires-dev]
-dev = [
-    { name = "pytest", specifier = ">=8.3" },
-    { name = "ruff", specifier = ">=0.9" },
 ]
 
 [[package]]

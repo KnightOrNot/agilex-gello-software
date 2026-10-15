@@ -1,6 +1,6 @@
 {
   "include": [
-    "src/agilex_gello_software"
+    "gello"
   ],
   "exclude": [
     "**/node_modules",

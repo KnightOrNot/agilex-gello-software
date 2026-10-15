@@ -1,0 +1,691 @@
+{
+  "repository": "https://github.com/wuphilipp/gello_software.git",
+  "commit": "204f53a64bef89471a1e483b0f874f755fbd2d3a",
+  "overrides": {
+    ".gitignore": "uv environment/build exclusions and restored upstream tracked title image",
+    ".github/workflows/pythonapp.yml": "uv, Python 3.11 and isolated adapter checks",
+    "README.md": "Local uv/development guide; upstream documentation lives in docs/OFFICIAL.md"
+  },
+  "files": {
+    ".flake8": {
+      "sha256": "bdfb6c9b99208e7985e0d46d9cdc94f825a24a8c97b53fb7048f5c0e63023733",
+      "mode": "100644"
+    },
+    ".github/workflows/pythonapp.yml": {
+      "sha256": "6bd9470a26dfd1a0f47a17d377c1394f3cc8e5dcfc8e89232651528f569821c4",
+      "mode": "100644"
+    },
+    ".github/workflows/ros2.yml": {
+      "sha256": "a220ba8ee2b69e619f475116b75b188471eb45b8717749ef605df6fb024fdbde",
+      "mode": "100644"
+    },
+    ".gitignore": {
+      "sha256": "0bbe0d11624227ef4fea2db845d72f6813e20ce84c547fa7afa6d1a0fedd406d",
+      "mode": "100644"
+    },
+    ".gitmodules": {
+      "sha256": "32f9832b80d25aaf0c3c2b26c0839ba3d4a0ac0a8f3d2a0043b3e5021e395617",
+      "mode": "100644"
+    },
+    ".isort.cfg": {
+      "sha256": "7681d633d2e3575707b158d443befb49d13efdfd8ed07ab0e9ceecedb15e8185",
+      "mode": "100644"
+    },
+    ".pre-commit-config.yaml": {
+      "sha256": "8d65f728819bba1a1a97e4efcc197d981e622c40ea70d55f98e97bc9802dbd97",
+      "mode": "100644"
+    },
+    "Dockerfile": {
+      "sha256": "8fbe0ae6bf9bcc23a816ef3a36af41454c8fdc7a1657db2b9ea110629987c68e",
+      "mode": "100644"
+    },
+    "LICENSE": {
+      "sha256": "8fe53aa951edd682d125326668c7463b5bd2eaeb0b23fc53d3c25bb4af45801b",
+      "mode": "100644"
+    },
+    "README.md": {
+      "sha256": "7aeba50fb5bc60e2323db7dce05336cf01df509dfd339c33af9b2008212d7b33",
+      "mode": "100644"
+    },
+    "config_hostmachine.sh": {
+      "sha256": "0bc8fedcde08c39860f034cfeb2761dce7e1106e4b8060a3864fd952f3631d12",
+      "mode": "100644"
+    },
+    "configs/references/yam_auto_generated.yaml": {
+      "sha256": "dac37464e6ce1a8fea075afdfa2c0aaababb90dcefd239cebea5eba1b1fdfc90",
+      "mode": "100644"
+    },
+    "configs/references/yam_auto_generated_sim.yaml": {
+      "sha256": "6c5aadc3496ccf45dbe95ef6972701c5631d5d01afb3a1daca4feadaffb5c889",
+      "mode": "100644"
+    },
+    "configs/templates/yam_sim_template.yaml": {
+      "sha256": "c7825ff2f716d65b442aa8751b7587b6ea6eec1ac3b06a2992a67c1133d30ae3",
+      "mode": "100644"
+    },
+    "configs/templates/yam_template.yaml": {
+      "sha256": "70a33352ec9cf9c34a7ec808d34514d6ac2a9642d4c30f201b170333916b8593",
+      "mode": "100644"
+    },
+    "configs/xarm_sim_test.yaml": {
+      "sha256": "259b7ca492ef519c40826694ae96dea0e04c736a6a93ac60d54c62a10be18fb6",
+      "mode": "100644"
+    },
+    "configs/yam_active.yaml": {
+      "sha256": "bf9bb170ee0b621947db2b2d694f02992e0586d31b183735d1f24b97bb759e52",
+      "mode": "100644"
+    },
+    "configs/yam_gello_factr_hw.yaml": {
+      "sha256": "227f9bb9e88b1f84c3380c8e3ccf7536ebae196a69e50c75a75bdd893769a990",
+      "mode": "100644"
+    },
+    "configs/yam_gello_factr_sim.yaml": {
+      "sha256": "7afb53ab806ae4cadb3c0ed5ea3058cd94c863b1c90508f82113346b6d62710e",
+      "mode": "100644"
+    },
+    "configs/yam_passive.yaml": {
+      "sha256": "a8e53f012ef0af01a0203847a4c9d5dbe8b13717cc97544e2a4198f06443a078",
+      "mode": "100644"
+    },
+    "experiments/launch_camera_clients.py": {
+      "sha256": "e94eb069abd2d08d41b4f3628f4e24e3b7ed35820903567fa9d0f7e43ff4d1f2",
+      "mode": "100644"
+    },
+    "experiments/launch_camera_nodes.py": {
+      "sha256": "e660b28a7b945afb7e92aab97f4dd0bd1f29d672f24d17298ec18e6fc80bd93e",
+      "mode": "100644"
+    },
+    "experiments/launch_nodes.py": {
+      "sha256": "2974cba81d907b97d532a2bbb83ec385e54b436e4ffb360afb27d0481315bdc9",
+      "mode": "100644"
+    },
+    "experiments/launch_yaml.py": {
+      "sha256": "f33031b3973db8252895203f18e6005caa50514c91051a97818e07f45f13c092",
+      "mode": "100644"
+    },
+    "experiments/quick_run.py": {
+      "sha256": "adfe7dc13bd4123fa8edb571f8747c8c83ac3d79d1228b43106c2c8e6e6ad689",
+      "mode": "100644"
+    },
+    "experiments/run_env.py": {
+      "sha256": "2fcd184fa0ea841021d93db6d4ad03564e652cb0e701d2a85ef0628bfc374d94",
+      "mode": "100644"
+    },
+    "gello/__init__.py": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "mode": "100644"
+    },
+    "gello/agents/agent.py": {
+      "sha256": "bec5c8395090a270ce6723d2f4e9b075285658047d03e46a15c9ddce3e057338",
+      "mode": "100644"
+    },
+    "gello/agents/gello_agent.py": {
+      "sha256": "f128bb5434f85d42a0987a44586b225fca5748743f572b0c4ccab11c06487f4f",
+      "mode": "100644"
+    },
+    "gello/agents/quest_agent.py": {
+      "sha256": "c65c36de5c58464095ac81fc1dd0ec7db08c91f5dbacb3f1025eb0f70db0e3cf",
+      "mode": "100644"
+    },
+    "gello/agents/spacemouse_agent.py": {
+      "sha256": "a8a944771445410fdbc5e0fa07a5f12314421319e0741f502e07583e0451be37",
+      "mode": "100644"
+    },
+    "gello/cameras/camera.py": {
+      "sha256": "e13a32bcd5d679652f5e9df0e7c0449c3e3b58478d42321af76aa0b3b795c919",
+      "mode": "100644"
+    },
+    "gello/cameras/realsense_camera.py": {
+      "sha256": "7d8b0c5462cead996b88e4d7c4a3ace8401f16f40a7f34781d8b9855c91f1f35",
+      "mode": "100644"
+    },
+    "gello/data_utils/conversion_utils.py": {
+      "sha256": "1baebaf06a07c8733c80aadb41e072a715f0b6d3adc0338999adff5f517b2794",
+      "mode": "100644"
+    },
+    "gello/data_utils/demo_to_gdict.py": {
+      "sha256": "9b16b1db2d31e82d6efa8ebbb6039d74b27763e145cac9266ff19e6872f21504",
+      "mode": "100644"
+    },
+    "gello/data_utils/format_obs.py": {
+      "sha256": "83a3c3477148ef86e1b5e2db8662f73dab5583ef7401c9696d092e9c153c0bb5",
+      "mode": "100644"
+    },
+    "gello/data_utils/keyboard_interface.py": {
+      "sha256": "e5d1f6c7e935238bdbec2e3c787a1f283feef011934692f6b280c4be2df55519",
+      "mode": "100644"
+    },
+    "gello/data_utils/plot_utils.py": {
+      "sha256": "cc2ecc3fe6cb8e236089bb1809f73ec2d4c17fb2359436de88a242f9279422a9",
+      "mode": "100644"
+    },
+    "gello/dm_control_tasks/arenas/__init__.py": {
+      "sha256": "a0ca93285567948edd0b9b5a24d6eb0f48bbf443836955762d35368680d07529",
+      "mode": "100644"
+    },
+    "gello/dm_control_tasks/arenas/arena.xml": {
+      "sha256": "4a02fb49141cffc25279866f83851c8db0ed597493f2cef0bc9f4d05591bec28",
+      "mode": "100644"
+    },
+    "gello/dm_control_tasks/arenas/base.py": {
+      "sha256": "cb1abf590c44cb081e56a7362e4fb0e157b0b8da5d5a33087871b27e1999fc96",
+      "mode": "100644"
+    },
+    "gello/dm_control_tasks/arms/__init__.py": {
+      "sha256": "c2517069f6871c6e2e68e4fb3c61bedc4f4ecc1ae3506ad0b004a798c981790f",
+      "mode": "100644"
+    },
+    "gello/dm_control_tasks/arms/franka.py": {
+      "sha256": "906d61b4d4d30c1fda7643db441b9a02f255e30861aa7f258bc18faf2a01827f",
+      "mode": "100644"
+    },
+    "gello/dm_control_tasks/arms/manipulator.py": {
+      "sha256": "fbf3e02965cdf6a32ed7c9b6dd3ab9afd5f76c73073dd26c08f2c7794dfb51d0",
+      "mode": "100644"
+    },
+    "gello/dm_control_tasks/arms/ur5e.py": {
+      "sha256": "b0f090d2cddba50b9835423587b383c69f0d04cd0e2e2321b2b2c77d1acadc1d",
+      "mode": "100644"
+    },
+    "gello/dm_control_tasks/arms/ur5e_test.py": {
+      "sha256": "c694f7bf0defd9a6e3f01082ca1de74e41f46251cc7148c5fc713bfbe9c91ca0",
+      "mode": "100644"
+    },
+    "gello/dm_control_tasks/arms/utils.py": {
+      "sha256": "09de0e673405e514e76c72e4398aefab2c38f6e7d842c0a72fb679879b9b6c2d",
+      "mode": "100644"
+    },
+    "gello/dm_control_tasks/arms/yam.py": {
+      "sha256": "2fe47db38c0afbfa0f52f8d5728bf8b40e1998e3c0ddd80026476c97615733b0",
+      "mode": "100644"
+    },
+    "gello/dm_control_tasks/manipulation/__init__.py": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "mode": "100644"
+    },
+    "gello/dm_control_tasks/manipulation/arenas/floors.py": {
+      "sha256": "d5ee7821d5969de1e14fba8f094a80fdb8896b2cd82741b92686af0a3321f3bf",
+      "mode": "100644"
+    },
+    "gello/dm_control_tasks/manipulation/tasks/base.py": {
+      "sha256": "36d9906168e94bc2d9c224275ae578bcef1602cbe4a503d564c688bf1c0456ea",
+      "mode": "100644"
+    },
+    "gello/dm_control_tasks/manipulation/tasks/block_play.py": {
+      "sha256": "a1162d6bbaa70cf5c4036f9ed18f0e4549a77502c490bcd3e5abc7655f66e017",
+      "mode": "100644"
+    },
+    "gello/dm_control_tasks/manipulation/tasks/reach.py": {
+      "sha256": "e27f30d572889be44ed7dd9ddc005047797589bb0f5b8b409edbf797be375ab4",
+      "mode": "100644"
+    },
+    "gello/dm_control_tasks/mjcf_utils.py": {
+      "sha256": "b7ee8d4b660e82e6927dd02896e275ebed61f89289401208600150136855210e",
+      "mode": "100644"
+    },
+    "gello/dynamixel/__init__.py": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "mode": "100644"
+    },
+    "gello/dynamixel/driver.py": {
+      "sha256": "b2c4e0cd294ff463d4c55fe06247fec2ef4c1122f2ef2ce45fd0160639616cf8",
+      "mode": "100644"
+    },
+    "gello/dynamixel/tests/test_driver.py": {
+      "sha256": "eac54b0e26187ab798482ba2217d3f9fc3fe0c3477a439e137c316d4f57e1f97",
+      "mode": "100644"
+    },
+    "gello/env.py": {
+      "sha256": "59ee84c8a252edc8976fa2145ad532f75203fd41373df8e35af87d85611b2130",
+      "mode": "100644"
+    },
+    "gello/factr/gravity_compensation.py": {
+      "sha256": "a49ac0cdf1d1046f1791c8681bf0cc3bd10fa197428561f2d22cbefddd11284b",
+      "mode": "100644"
+    },
+    "gello/factr/run_yam_gello_gravity_comp.py": {
+      "sha256": "2de4008a73b717f92ed1d5c41659885d13d425b6ac07ca53b27046d9263239f0",
+      "mode": "100644"
+    },
+    "gello/factr/urdf/yam_active_gello/config.json": {
+      "sha256": "65d6fd75987dadc4ea32536e37f3b14692f285b2a0755c35547fa6369a4d2832",
+      "mode": "100644"
+    },
+    "gello/factr/urdf/yam_active_gello/robot.urdf": {
+      "sha256": "ee85d34f65ef7f8e080b0882fcbb219315f38828032a66f9e3142ccb1f629830",
+      "mode": "100644"
+    },
+    "gello/factr/yam_gello_factr_agent.py": {
+      "sha256": "16f8abf05ab1b09582154cfab9eb6556569ce7224a46771da72982e20174fcbe",
+      "mode": "100644"
+    },
+    "gello/robots/dynamixel.py": {
+      "sha256": "336da179a7f07f12326804c967840fc1b1fb7be6b0ad741dffffda6ec3f76b9f",
+      "mode": "100644"
+    },
+    "gello/robots/panda.py": {
+      "sha256": "7e2d058c5ae6532e240164d7cd11d493d57a48f374d1b9829f3e58c998a9562d",
+      "mode": "100644"
+    },
+    "gello/robots/robot.py": {
+      "sha256": "009c5211ef91792d942223a6ddb46a52fd4cecfb9545f095ab2104ecdc8795ca",
+      "mode": "100644"
+    },
+    "gello/robots/robotiq_gripper.py": {
+      "sha256": "b19149dde39cb1afb24eeae71a3f991b23c3f395ed861c9ffc53d005bd68cc87",
+      "mode": "100644"
+    },
+    "gello/robots/sim_robot.py": {
+      "sha256": "458a27724e3c24cc48abefba2559b5d94502903d982524b564469da606f205e4",
+      "mode": "100644"
+    },
+    "gello/robots/ur.py": {
+      "sha256": "8d4071615602b258811b58cc5526ccbde2b4ea8c5b6cb157d37d55eb1c3a4961",
+      "mode": "100644"
+    },
+    "gello/robots/xarm_robot.py": {
+      "sha256": "a8fae66ebc529e516facb3dd93c3ae4fab333a62c31a67bc90a7d7f66f05cb11",
+      "mode": "100644"
+    },
+    "gello/robots/yam.py": {
+      "sha256": "67eb44a9d180bc4c5cf0989d6e73182fb96ec202fe10f8df084871c96053e621",
+      "mode": "100644"
+    },
+    "gello/utils/control_utils.py": {
+      "sha256": "a35228b2ee0408978a091bbcbc2aa6dd15eee220c0ee233d4674a184cbdb11ad",
+      "mode": "100644"
+    },
+    "gello/utils/launch_utils.py": {
+      "sha256": "3b4ceb8cdd99a6c2093519836e49595bb2a907593d8c4e2f5763a7f84cd1433b",
+      "mode": "100644"
+    },
+    "gello/zmq_core/camera_node.py": {
+      "sha256": "9898c546a9db54af832b82f734cd794bace4df8b42b081f0ef5362186084f9ed",
+      "mode": "100644"
+    },
+    "gello/zmq_core/robot_node.py": {
+      "sha256": "679567bf3c9dffad2eba599f262f18a8c7149b9f9985a6478a874ceb78bba0bf",
+      "mode": "100644"
+    },
+    "imgs/fr3_gello_calib_pose.jpeg": {
+      "sha256": "7538ca5bf53e47fafd84bbdf7537f42ad336d1acca25bd8598eee2998e0c894e",
+      "mode": "100644"
+    },
+    "imgs/franka_gello_duo_v05_annotated.jpg": {
+      "sha256": "c3b4c20002927d06fd128423a32ffc6d017fece5b1bea4a5a9f70a3184711c23",
+      "mode": "100644"
+    },
+    "imgs/franka_gello_single_v05_annotated.jpg": {
+      "sha256": "edef53095c5059a5edba5e08485ae287f78258b236b4839662cfb23351294493",
+      "mode": "100644"
+    },
+    "imgs/gello_matching_joints.jpg": {
+      "sha256": "d150f2182f62190bf6a47d05462cdd942932b1fae15acd89348f42defed01ec7",
+      "mode": "100644"
+    },
+    "imgs/robot_known_configuration.jpg": {
+      "sha256": "1814d5c3fc0068e82846f987eb105e7bb6a00eed147309a499975dcb5aca566b",
+      "mode": "100644"
+    },
+    "imgs/title.png": {
+      "sha256": "9eb944c7c4c202d274f1330c469ea3861dc8b71b9498781e87febf13702622e3",
+      "mode": "100644"
+    },
+    "imgs/yam_default.JPG": {
+      "sha256": "f4a89c25293f093d42994f6a0abf0148dca4583ab85571aa1721472014024b33",
+      "mode": "100644"
+    },
+    "kill_nodes.sh": {
+      "sha256": "19d37c761a8da58d3190222c6c0468204eda7a9e98340cae876bfa8c2f0445ce",
+      "mode": "100755"
+    },
+    "mypy.ini": {
+      "sha256": "fd1a32ba351041735cfc4c8bca220063a7a71175818927c81a6f9301af7f2a29",
+      "mode": "100644"
+    },
+    "pyrightconfig.json": {
+      "sha256": "c90927be95e969bc2fa038d45b2a8e8a4c617ad99b7be47b64bd3e48cc3d0a66",
+      "mode": "100644"
+    },
+    "requirements.txt": {
+      "sha256": "e6346cdcdbea7dc7f4eed13e8120f78080a9c4f16a444b46878199fe8d2e4a53",
+      "mode": "100644"
+    },
+    "requirements_dev.txt": {
+      "sha256": "c2d8570654c185ef857ee8630ee50ec55ad951a81517be62f8eda7d537a96827",
+      "mode": "100644"
+    },
+    "ros2/.clang-format": {
+      "sha256": "0852a785f04fcc4f395051cd9384a78ba51d9436e1b9bb728602a25e49c08013",
+      "mode": "100644"
+    },
+    "ros2/.clang-tidy": {
+      "sha256": "cffd054d87e888acdcd2bed5496aaef7fae91f21c944eda52816722376a84048",
+      "mode": "100644"
+    },
+    "ros2/.devcontainer/Dockerfile": {
+      "sha256": "77b1d1c34e7f69f45510d02751140a6b6533c145b35c2618351e018f9bc99fa2",
+      "mode": "100644"
+    },
+    "ros2/.devcontainer/devcontainer.json": {
+      "sha256": "2414de53712481bf05098db34f2bf111c946ae38c9e18e4dc91b43a3495b8ca7",
+      "mode": "100644"
+    },
+    "ros2/.devcontainer/docker-compose.yml": {
+      "sha256": "fee91499590e9ee3503c71d50b7f43323b521f29266410bc8f2a5525f5aae158",
+      "mode": "100644"
+    },
+    "ros2/.gitignore": {
+      "sha256": "79f5cbbb1f9d9911c93bb5a422b92cfcdce33145e3cef0ff9871df11fcbac94a",
+      "mode": "100644"
+    },
+    "ros2/CHANGELOG.md": {
+      "sha256": "3b7fd5f886dc2d5bc717e0ee717a889711bb63f02fe1e79190dab9b63d2424cc",
+      "mode": "100644"
+    },
+    "ros2/README.md": {
+      "sha256": "54b3115bd00f07d70d86afbd0c8e04edadf79d3edf56b793456eb7e71ae36854",
+      "mode": "100644"
+    },
+    "ros2/install_workspace_dependencies.bash": {
+      "sha256": "662ca100ee59e42dfa6cc08cafcb3dd5e2095a8febe572353a51329da480631f",
+      "mode": "100644"
+    },
+    "ros2/pyproject.toml": {
+      "sha256": "89a8f607093de2cb6379ee6427ee5f624f38cb5304acd575387576aef60299ba",
+      "mode": "100644"
+    },
+    "ros2/requirements.txt": {
+      "sha256": "81546713498b5fccf3bf2347431a8199b15ef0c24a59ad595962e0249912b029",
+      "mode": "100644"
+    },
+    "ros2/requirements_dev.txt": {
+      "sha256": "c006c7e3ab14d686f63524136f1ec7c5e553d839bc01c851e4dc9de2bdbfc589",
+      "mode": "100644"
+    },
+    "ros2/src/franka_fr3_arm_controllers/CMakeLists.txt": {
+      "sha256": "26073e6ba297c0d923f7e93eb85142b92db4c6933b40346f666b616217ac6186",
+      "mode": "100644"
+    },
+    "ros2/src/franka_fr3_arm_controllers/LICENSE": {
+      "sha256": "cfc7749b96f63bd31c3c42b5c471bf756814053e847c10f3eb003417bc523d30",
+      "mode": "100644"
+    },
+    "ros2/src/franka_fr3_arm_controllers/NOTICE": {
+      "sha256": "4dd12371ba349990cf600ab5a390adfbe8a7291ece37b3475cc66af560722a3f",
+      "mode": "100644"
+    },
+    "ros2/src/franka_fr3_arm_controllers/config/controllers.yaml": {
+      "sha256": "9b3869c9bcb5b8bb6ef529339a4876b8d3dd733f8141e0fc62eb96777d3da885",
+      "mode": "100644"
+    },
+    "ros2/src/franka_fr3_arm_controllers/config/example_fr3_config.yaml": {
+      "sha256": "f37bf6e860bf0e5c87029c6aea28831b8568fd10fcc4cf22a6fc1f9af9b96c75",
+      "mode": "100644"
+    },
+    "ros2/src/franka_fr3_arm_controllers/config/example_fr3_duo_config.yaml": {
+      "sha256": "1359578c9f3dc2c3501ea6982f55a490d4365718486af13f842803bb6484d74a",
+      "mode": "100644"
+    },
+    "ros2/src/franka_fr3_arm_controllers/franka_fr3_arm_controllers.xml": {
+      "sha256": "50e5c0a6cb067306676f353237aea1cd4ac3d22876314c23ddd4d1237c756ef3",
+      "mode": "100644"
+    },
+    "ros2/src/franka_fr3_arm_controllers/include/franka_fr3_arm_controllers/joint_impedance_controller.hpp": {
+      "sha256": "cfc44ee663d81f61fa304b7f032e153aa292176c7f16ce412dacd1eee623ea96",
+      "mode": "100644"
+    },
+    "ros2/src/franka_fr3_arm_controllers/include/franka_fr3_arm_controllers/motion_generator.hpp": {
+      "sha256": "710c6fce510380f9f16b809e07b26dcd7a4429b4e5f0918f6793a9ddc1e7e88c",
+      "mode": "100644"
+    },
+    "ros2/src/franka_fr3_arm_controllers/launch/franka.launch.py": {
+      "sha256": "c3e28709203e88b6521f26c501a8d9df4be73a1f24432b142d573898b8327db2",
+      "mode": "100644"
+    },
+    "ros2/src/franka_fr3_arm_controllers/launch/franka_fr3_arm_controllers.launch.py": {
+      "sha256": "81f124e816be9a6ff9f5b18945b67951380eb518d16ecb2d92f4f2f2b46cd594",
+      "mode": "100644"
+    },
+    "ros2/src/franka_fr3_arm_controllers/package.xml": {
+      "sha256": "a15021d504d29e39b4524483b96669b881429f95004e493b2066ab74155bd953",
+      "mode": "100644"
+    },
+    "ros2/src/franka_fr3_arm_controllers/src/joint_impedance_controller.cpp": {
+      "sha256": "fee19a671af7647c45c2ee30c823b36716a969193d26ce0d8cd24d1ddcbdbdda",
+      "mode": "100644"
+    },
+    "ros2/src/franka_fr3_arm_controllers/src/motion_generator.cpp": {
+      "sha256": "363dd7edd898246064efc2043171f5d45e4203b518f14b4014abd0088124342d",
+      "mode": "100644"
+    },
+    "ros2/src/franka_fr3_arm_controllers/test/include/mocks/mock_joint_state_publisher.hpp": {
+      "sha256": "1192b02eb697cb5faadaf0a28d99d49c30d822c39036072a896f46e86a7db431",
+      "mode": "100644"
+    },
+    "ros2/src/franka_fr3_arm_controllers/test/include/mocks/mock_parameter_server.hpp": {
+      "sha256": "3eac5114583c822d8e96f2233f8056a5d9e3dc444c441bddb2e74e11a962d553",
+      "mode": "100644"
+    },
+    "ros2/src/franka_fr3_arm_controllers/test/include/test_joint_impedance_controller.hpp": {
+      "sha256": "be6d472aaac4fb68ce4c0f3357b9067de0f9216838a6415ab4bf58871c23d8e0",
+      "mode": "100644"
+    },
+    "ros2/src/franka_fr3_arm_controllers/test/invalid_configuration_test.cpp": {
+      "sha256": "0faaa504c510d89bf03e7ae5d1dd25f196be2931ab5be051af612b07d62b9f4f",
+      "mode": "100644"
+    },
+    "ros2/src/franka_fr3_arm_controllers/test/setup_test.cpp": {
+      "sha256": "49d51a438a3236b0953a82f1d147f911158caaa9ae783817f66c0fba857a7410",
+      "mode": "100644"
+    },
+    "ros2/src/franka_fr3_arm_controllers/test/test_joint_impedance_controller.cpp": {
+      "sha256": "c7744d61dc5ba6f153265eb8c1eb44158b10c335144dd5c30a42b43ec3a8f4e9",
+      "mode": "100644"
+    },
+    "ros2/src/franka_gello_state_publisher/LICENSE": {
+      "sha256": "25ab049cf52c6c7ecf874532bcc8ecdf652063baf8022b3cf244372a489dfdc4",
+      "mode": "100644"
+    },
+    "ros2/src/franka_gello_state_publisher/config/example_duo.yaml": {
+      "sha256": "b3407a63cf4d4fea0b85a2055c4c95adf0442efa3677da6c0821b1d8201d1854",
+      "mode": "100644"
+    },
+    "ros2/src/franka_gello_state_publisher/config/example_single.yaml": {
+      "sha256": "17cb0c1434788c1e838496f4800d918a7e7fbf2a0d162b51af7ad4351fb6fb62",
+      "mode": "100644"
+    },
+    "ros2/src/franka_gello_state_publisher/config/franka_gello_duo.yaml": {
+      "sha256": "bd6fd7f57c47f843f07852e8694ff66f774837bb1a981840f7358859623a55b6",
+      "mode": "100644"
+    },
+    "ros2/src/franka_gello_state_publisher/config/franka_gello_single.yaml": {
+      "sha256": "a04ab3b543bda88d00ef1d338e569082e9f9e33fa26511b18492f1867082e0c6",
+      "mode": "100644"
+    },
+    "ros2/src/franka_gello_state_publisher/franka_gello_state_publisher/__init__.py": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "mode": "100644"
+    },
+    "ros2/src/franka_gello_state_publisher/franka_gello_state_publisher/dynamixel/README.md": {
+      "sha256": "ddb6aac86f872d0ca25f4523022170eb640d86901a218853d105401d0b9be15d",
+      "mode": "100644"
+    },
+    "ros2/src/franka_gello_state_publisher/franka_gello_state_publisher/dynamixel/__init__.py": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "mode": "100644"
+    },
+    "ros2/src/franka_gello_state_publisher/franka_gello_state_publisher/dynamixel/driver.py": {
+      "sha256": "b730317c48b16deb1d2c7284f8c61899817429c40d8b03c1ee5bb428589e79f9",
+      "mode": "100644"
+    },
+    "ros2/src/franka_gello_state_publisher/franka_gello_state_publisher/dynamixel/motor_configs/xl330.yaml": {
+      "sha256": "5dc7b3dfaddc6ebde1ddc7834b6e88bc36bb0dcf9bbbbbf4e0bf4cef82db9757",
+      "mode": "100644"
+    },
+    "ros2/src/franka_gello_state_publisher/franka_gello_state_publisher/gello_hardware.py": {
+      "sha256": "23535acc912ad1b3c2a83b5ff48fdef42a2d51c69684b3ac4588389cec97ec2d",
+      "mode": "100644"
+    },
+    "ros2/src/franka_gello_state_publisher/franka_gello_state_publisher/gello_parameter_config.py": {
+      "sha256": "0882ceaa1e449a69f20c8c0127a765d4d0fbb887a08c8b8b510bf9307634f598",
+      "mode": "100644"
+    },
+    "ros2/src/franka_gello_state_publisher/franka_gello_state_publisher/gello_publisher.py": {
+      "sha256": "9d009e97b240e2ee547771479233691fdd278db68d2f9264889ad3bc49407b9e",
+      "mode": "100644"
+    },
+    "ros2/src/franka_gello_state_publisher/launch/main.launch.py": {
+      "sha256": "0b917cea0c8d71b59ccf13e5992c4143fa2b092d93f2a80ab99a97a63476ee0f",
+      "mode": "100755"
+    },
+    "ros2/src/franka_gello_state_publisher/package.xml": {
+      "sha256": "0dd17d45a726e566caef2979d2cf3e8c5ee76b2cacf4b145b13ff9f41b064591",
+      "mode": "100644"
+    },
+    "ros2/src/franka_gello_state_publisher/resource/franka_gello_state_publisher": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "mode": "100644"
+    },
+    "ros2/src/franka_gello_state_publisher/scripts/get_offsets.py": {
+      "sha256": "1718ed96b93d51005ee9b4c441c019c88161f594b60cdd30b9bba094a5f36589",
+      "mode": "100644"
+    },
+    "ros2/src/franka_gello_state_publisher/setup.cfg": {
+      "sha256": "d1c06717e06670642b4408b770316ec6ff8029a003c3641bccb3578d6d3e8100",
+      "mode": "100644"
+    },
+    "ros2/src/franka_gello_state_publisher/setup.py": {
+      "sha256": "70043934a43686e5487b57a98b622de906dc99f257ba0226a18f739f5ff607c5",
+      "mode": "100644"
+    },
+    "ros2/src/franka_gello_state_publisher/test/test_copyright.py": {
+      "sha256": "8306494900a4cac5bc4d721a7eb7e061c920e6e70e4d504d6dfd815545b167e1",
+      "mode": "100644"
+    },
+    "ros2/src/franka_gello_state_publisher/test/test_flake8.py": {
+      "sha256": "fc23ea6fe9d556d996e719f800052ff6a7edbb5ce609b65e7ca718b38425d4ce",
+      "mode": "100644"
+    },
+    "ros2/src/franka_gello_state_publisher/test/test_pep257.py": {
+      "sha256": "8c0b228755484d590201e807c762f1e922684c842a12dc17aaefff2e7be9f072",
+      "mode": "100644"
+    },
+    "ros2/src/franka_gripper_manager/LICENSE": {
+      "sha256": "cfc7749b96f63bd31c3c42b5c471bf756814053e847c10f3eb003417bc523d30",
+      "mode": "100644"
+    },
+    "ros2/src/franka_gripper_manager/NOTICE": {
+      "sha256": "294ceebdb6a98ca2cb65da516b7f0f3078ebcb461bd04e79cf41b9beeb40e4f8",
+      "mode": "100644"
+    },
+    "ros2/src/franka_gripper_manager/config/example_fr3_config_franka_hand.yaml": {
+      "sha256": "146bdd494390fa14d7ca9e8ce8f73ea6b16ca7a9a4dbc7f623c9e9b901bc30d2",
+      "mode": "100644"
+    },
+    "ros2/src/franka_gripper_manager/config/example_fr3_config_robotiq.yaml": {
+      "sha256": "4309db6a623211a35cb20e2ac2708ef5e30a1c7ba63b2b526792e314798eccf2",
+      "mode": "100644"
+    },
+    "ros2/src/franka_gripper_manager/config/example_fr3_duo_config_franka_hand.yaml": {
+      "sha256": "6310af3f04142d80d6f6932035de5f529e4d88748100fd56d9d5a65f2d29ff19",
+      "mode": "100644"
+    },
+    "ros2/src/franka_gripper_manager/config/example_fr3_duo_config_robotiq.yaml": {
+      "sha256": "184dccfdc77951a71b7eb8346357fe84f184e863cde12788579318d082882a6f",
+      "mode": "100644"
+    },
+    "ros2/src/franka_gripper_manager/config/robotiq_controllers.yaml": {
+      "sha256": "b2d0700de2491dee9187c5ad23910eeb42834c683b5cbad24b511304a64bd91a",
+      "mode": "100644"
+    },
+    "ros2/src/franka_gripper_manager/franka_gripper_manager/__init__.py": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "mode": "100644"
+    },
+    "ros2/src/franka_gripper_manager/franka_gripper_manager/franka_gripper_client.py": {
+      "sha256": "8f5e45b5615460477b47a0921e7b8d5b86b073ee33f44ced4832ebf020f2adf7",
+      "mode": "100644"
+    },
+    "ros2/src/franka_gripper_manager/franka_gripper_manager/robotiq_gripper_client.py": {
+      "sha256": "968cf34f6e6d938a9bc3d45e676bc2e94b017560368c212c2348346433448be8",
+      "mode": "100644"
+    },
+    "ros2/src/franka_gripper_manager/launch/franka_gripper_client.launch.py": {
+      "sha256": "bb6f4587a6b28f862d411d29919243b5abb5522e8724dedf0979ba4ace9b36e6",
+      "mode": "100644"
+    },
+    "ros2/src/franka_gripper_manager/launch/robotiq.launch.py": {
+      "sha256": "d086adb0bc94133aefdfca959d2a534a0a46319fee4ba3bf48e7b14d7119b6b3",
+      "mode": "100644"
+    },
+    "ros2/src/franka_gripper_manager/launch/robotiq_gripper_controller_client.launch.py": {
+      "sha256": "ea824f2fc73ba653dbcd600b9952b5002a3f7cab254ca6f09f42134a3b7d667a",
+      "mode": "100644"
+    },
+    "ros2/src/franka_gripper_manager/package.xml": {
+      "sha256": "b913732ce458a76dadeddbe8c9550307ebedfd06f6e040dc37278578b98eaa4f",
+      "mode": "100644"
+    },
+    "ros2/src/franka_gripper_manager/resource/franka_gripper_manager": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "mode": "100644"
+    },
+    "ros2/src/franka_gripper_manager/setup.cfg": {
+      "sha256": "a51a1fd48776ad8a0ae62b3beb75e1c2803f3586ed04b064d9233897014841a2",
+      "mode": "100644"
+    },
+    "ros2/src/franka_gripper_manager/setup.py": {
+      "sha256": "910747357a7ac025235469f9cc99533650ab8655a3a404ac2b0d87994d575435",
+      "mode": "100644"
+    },
+    "ros2/src/franka_gripper_manager/test/test_copyright.py": {
+      "sha256": "8306494900a4cac5bc4d721a7eb7e061c920e6e70e4d504d6dfd815545b167e1",
+      "mode": "100644"
+    },
+    "ros2/src/franka_gripper_manager/test/test_flake8.py": {
+      "sha256": "635a886ec347f476a43fc004b140a1d85441a4814d4feb69d1e4117001cbd4ed",
+      "mode": "100644"
+    },
+    "ros2/src/franka_gripper_manager/test/test_pep257.py": {
+      "sha256": "8c0b228755484d590201e807c762f1e922684c842a12dc17aaefff2e7be9f072",
+      "mode": "100644"
+    },
+    "ros2/src/franka_gripper_manager/urdf/robotiq_2f_85_gripper.urdf.xacro": {
+      "sha256": "6c849e4f32c10af46b1879d95d6ea078cb65c489c8aad1ac55cde748ffb2f4b4",
+      "mode": "100644"
+    },
+    "scripts/arm_blocks_play.py": {
+      "sha256": "9b93d6afdb35b2abee9fa413c4744e64e744ca96f59df8a44f9d0665c18d9b11",
+      "mode": "100644"
+    },
+    "scripts/gello_get_offset.py": {
+      "sha256": "144807f65857eba5ffae43f97a4036135b7c3d97c8d6d9b8ac9899199ecdc67a",
+      "mode": "100644"
+    },
+    "scripts/generate_yam_config.py": {
+      "sha256": "bd0f6c1b5eafff303ae9d3982109ae2905484bcb895c0c2afc5533d9e9815e3f",
+      "mode": "100644"
+    },
+    "scripts/launch.py": {
+      "sha256": "4265ac881fd3f90bf6b99337ddc05f3db1f6111ce062b993ce2a04e4a489477e",
+      "mode": "100644"
+    },
+    "scripts/reset_all_can.sh": {
+      "sha256": "d6076d1fc9877058b611e9b3b02a63a21f14039f83f3bd583b51f85bf3fee2cb",
+      "mode": "100644"
+    },
+    "scripts/visualize_example.py": {
+      "sha256": "0d8920b0636ab475d51d05df263ba92c4e389f84eb30e91de525169cd9851073",
+      "mode": "100644"
+    },
+    "setup.py": {
+      "sha256": "1a04d0bfbc53d6665c9af2ae8eb52570c397922774d7bcfa906d8afcbb007490",
+      "mode": "100644"
+    }
+  },
+  "submodules": {
+    "third_party/DynamixelSDK": "3450c7078917b262d9b36042c15444047aae226e",
+    "third_party/mujoco_menagerie": "7f0684e0d2f6c9d75174d1a51e4924b7519119f9"
+  }
+}

@@ -14,7 +14,9 @@ def project_root() -> Path:
     if (checkout / "pyproject.toml").is_file():
         return checkout
     cwd = Path.cwd()
-    if (cwd / "pyproject.toml").is_file() and (cwd / "src" / "agilex_gello_software").is_dir():
+    if (cwd / "pyproject.toml").is_file() and (
+        cwd / "src" / "agilex_gello_software"
+    ).is_dir():
         return cwd
     raise RuntimeError(
         "Cannot locate GELLO; set GELLO_PROJECT_ROOT to its repository root."

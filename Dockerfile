@@ -1,9 +1,9 @@
 FROM nvidia/cuda:11.8.0-devel-ubuntu22.04
 
-WORKDIR /agilex-gello-software
+WORKDIR /gello
 
 # Set environment variables first (less likely to change)
-ENV PYTHONPATH=/agilex-gello-software/src
+ENV PYTHONPATH=/gello:/gello/third_party/oculus_reader/
 
 # Group apt updates and installs together
 RUN apt update && apt install -y \
@@ -18,7 +18,5 @@ RUN apt update && apt install -y \
 RUN echo "alias python=python3" >> ~/.bashrc
 
 # Install Python dependencies
-COPY pyproject.toml uv.lock README.md LICENSE /agilex-gello-software/
-RUN pip install uv && uv sync --frozen --no-dev --no-install-project
-COPY src /agilex-gello-software/src
-RUN uv sync --frozen --no-dev
+COPY requirements.txt /gello
+RUN pip install -r requirements.txt

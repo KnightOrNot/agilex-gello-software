@@ -1,57 +1,61 @@
-"""Unified command-line interface for GELLO software."""
+"""Local read command plus direct launchers for unchanged upstream scripts."""
 
 from __future__ import annotations
 
+import contextlib
 import importlib
+import runpy
 import sys
 from collections.abc import Sequence
 from dataclasses import dataclass
-from typing import Literal
+
+from agilex_gello_software.paths import project_root
 
 
 @dataclass(frozen=True)
 class Command:
-    module: str
     description: str
-    parser: Literal["argparse", "tyro"] = "argparse"
+    script: str | None = None
     extra: str | None = None
 
 
-COMMANDS: dict[str, Command] = {
-    "read": Command("agilex_gello_software.commands.read", "read GELLO joints and gripper"),
-    "launch-yaml": Command(
-        "agilex_gello_software.commands.launch_yaml", "launch from a YAML configuration", "tyro"
-    ),
+COMMANDS = {
+    "read": Command("read GELLO joints and gripper"),
+    "launch-yaml": Command("launch upstream YAML configuration", "launch_yaml.py"),
     "launch-nodes": Command(
-        "agilex_gello_software.commands.launch_nodes", "launch a robot ZMQ server", "tyro", "robots"
+        "launch upstream robot server", "launch_nodes.py", "robots"
     ),
-    "camera-server": Command(
-        "agilex_gello_software.commands.camera_server", "serve RealSense cameras", "tyro", "camera"
-    ),
+    "camera-server": Command("serve cameras", "launch_camera_nodes.py", "camera"),
     "camera-client": Command(
-        "agilex_gello_software.commands.camera_client",
-        "display remote camera streams",
-        "tyro",
-        "camera",
+        "display camera streams", "launch_camera_clients.py", "camera"
     ),
-    "quick-run": Command(
-        "agilex_gello_software.commands.quick_run", "run the upstream quick workflow", "tyro", "full"
-    ),
-    "run-env": Command(
-        "agilex_gello_software.commands.run_env", "run a configured GELLO environment", "tyro", "full"
-    ),
+    "quick-run": Command("run upstream quick workflow", "quick_run.py", "full"),
+    "run-env": Command("run upstream GELLO environment", "run_env.py", "full"),
 }
 
 
 def _print_help() -> None:
     print("usage: agilex-gello-software COMMAND [OPTIONS]\n")
-    print("GELLO hardware, teleoperation, and experiment commands.\n")
-    print("commands:")
-    width = max(len(name) for name in COMMANDS)
     for name, command in COMMANDS.items():
         suffix = f" [extra: {command.extra}]" if command.extra else ""
-        print(f"  {name:<{width}}  {command.description}{suffix}")
-    print("\nRun `agilex-gello-software COMMAND --help` for command-specific options.")
+        print(f"  {name:<14} {command.description}{suffix}")
+    print("\nRun `agilex-gello-software COMMAND --help` for options.")
+
+
+def _run_upstream(script: str, args: list[str]) -> int:
+    root = project_root()
+    path = root / "experiments" / script
+    if not path.is_file():
+        raise RuntimeError(f"Upstream script not found: {path}")
+    original_argv = sys.argv
+    try:
+        sys.argv = [str(path), *args]
+        # Upstream scripts intentionally keep their original relative resources.
+        with contextlib.chdir(root):
+            runpy.run_path(str(path), run_name="__main__")
+    finally:
+        sys.argv = original_argv
+    return 0
 
 
 def main(argv: Sequence[str] | None = None) -> int:
@@ -66,24 +70,20 @@ def main(argv: Sequence[str] | None = None) -> int:
         _print_help()
         return 2
     try:
-        module = importlib.import_module(command.module)
-        if command.parser == "tyro":
-            import tyro
-
-            parsed = tyro.cli(module.Args, prog=f"agilex-gello-software {name}", args=args)
-            result = module.main(parsed)
-        else:
-            result = module.main(args)
-    except ModuleNotFoundError as exc:
-        if command.extra:
-            print(
-                f"agilex-gello-software {name}: missing optional dependency {exc.name!r}; "
-                f"run `uv sync --extra {command.extra}`",
-                file=sys.stderr,
+        if command.script is None:
+            return importlib.import_module("agilex_gello_software.commands.read").main(
+                args
             )
-            return 1
-        raise
-    return int(result) if isinstance(result, int) else 0
+        return _run_upstream(command.script, args)
+    except ModuleNotFoundError as exc:
+        hint = f"; install `uv sync --extra {command.extra}`" if command.extra else ""
+        print(
+            f"agilex-gello-software {name}: missing {exc.name!r}{hint}", file=sys.stderr
+        )
+        return 1
+    except (OSError, RuntimeError) as exc:
+        print(f"agilex-gello-software {name}: {exc}", file=sys.stderr)
+        return 1
 
 
 if __name__ == "__main__":

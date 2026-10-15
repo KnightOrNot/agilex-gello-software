@@ -2,6 +2,11 @@
 
 ## Unreleased
 
+- 恢复固定上游 `gello/`、脚本、配置、ROS2 和 DynamixelSDK，将本地入口与生命周期适配集中到 src。
+- 保留 Python 3.11 与 uv 流程，构建同时包含原生和本地命名空间；两份应用锁文件改用固定 SDK checkout。
+- 增加上游哈希审计、协议单位/错误/清理与校准等价回归；controller 安装新增嵌套 SDK 初始化。
+- README 作为本项目开发入口，上游说明集中到 docs/OFFICIAL.md；维护者已确认当前流程运行正常。
+
 - 按 controller 文档结构整理安装、架构、CLI、设备配置、排障与贡献指南，保留上游说明和硬件资料。
 - 补充 agent 开发约束、许可来源与多仓库提交流程。
 

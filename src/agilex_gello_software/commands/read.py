@@ -10,7 +10,10 @@ from collections.abc import Sequence
 
 import numpy as np
 
-from agilex_gello_software.agents.gello_agent import PORT_CONFIG_MAP, DynamixelRobotConfig
+from agilex_gello_software.agents.gello_agent import (
+    PORT_CONFIG_MAP,
+    DynamixelRobotConfig,
+)
 from agilex_gello_software.dynamixel.driver import DynamixelDriver
 
 
@@ -68,8 +71,7 @@ def main(argv: Sequence[str] | None = None) -> int:
     if config is None:
         known_ports = "\n  ".join(PORT_CONFIG_MAP)
         raise SystemExit(
-            f"unknown GELLO port: {args.gello_port}\n"
-            f"configured ports:\n  {known_ports}"
+            f"unknown GELLO port: {args.gello_port}\nconfigured ports:\n  {known_ports}"
         )
     if args.baudrate <= 0:
         raise SystemExit("--baudrate must be positive")

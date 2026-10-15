@@ -2,30 +2,31 @@
 
 ## Project Structure & Responsibilities
 
-`src/agilex_gello_software/` provides GELLO agents, Dynamixel access, device calibration, robot abstractions, and generic upstream commands. `configs/`, `experiments/`, and `scripts/` contain configuration examples and upstream tools. `tests/` contains hardware-free regressions; `ros2/` has a separate ROS2 workflow. Preserve reference images in `imgs/` and the Menagerie submodule in `third_party/`.
+`gello/`, `experiments/`, `scripts/`, `configs/`, `ros2/`, and hardware assets preserve the pinned upstream tree. `third_party/DynamixelSDK` and Menagerie retain upstream revisions. Do not rename upstream imports or patch these files for an installation. README, local docs, uv configuration, Python version, and uv CI describe this fork; declared upstream overrides are recorded in `src/agilex_gello_software/upstream.json`.
 
-PiPER-X client composition, follower mapping, JS positioning, following, and raw recording belong to agilex-controller. Alignment and dataset conversion belong to lerobot-converter. Keep those applications out of this library's dependencies. Pass installation calibration through `DynamixelRobotConfig`; do not repurpose an upstream port-map entry for one installation.
+Put application-facing extensions in `src/agilex_gello_software/`: agent/config adapters, driver lifecycle policy, local read command, and script dispatch. Reuse upstream methods without global monkey patches. `tests/` verifies adapters with fake hardware. Preserve historical generated configurations under the local package's `configs/legacy/`.
+
+Client composition, follower mapping, JS positioning, recording, and process management belong to agilex-controller; alignment/conversion belongs to lerobot-converter. Neither application is a library dependency.
 
 ## Build, Test, and Development Commands
 
-Use Python 3.11 and uv from this repository root.
+Use Python 3.11 and uv from this repository root. Initialize the upstream DynamixelSDK before syncing.
 
-- `uv sync --frozen`: install the base package and development tools.
-- `uv run --frozen agilex-gello-software --help`: list commands without hardware access.
-- `uv run --frozen pytest`: run the configured `tests/` suite with fake hardware.
-- `uv run --frozen ruff check src tests experiments scripts --select E9,F63,F7,F82`: match Python CI lint.
-- `uv build`: build distributions.
-
-Optional tools require the corresponding `camera`, `simulation`, `robots`, or `full` extra. Simulation assets require submodule initialization. See `docs/installation.md` before running hardware commands.
+- `uv sync --frozen`: install local packages and the pinned SDK source.
+- `uv run --frozen agilex-gello-software --help`: inspect the CLI.
+- `uv run --frozen pytest`: run hardware-free adapter regressions.
+- `uv run --frozen ruff check src tests`: lint local code.
+- `uv run --frozen ruff format --check src tests`: check local formatting.
+- `uv run --frozen ruff check gello experiments scripts --select E9,F63,F7,F82`: check upstream syntax/name errors.
+- `uv run --frozen python -m agilex_gello_software.upstream`: audit pinned files and initialized submodules offline.
+- `uv build`: build both Python namespaces through Hatchling.
 
 ## Coding & Testing Guidelines
 
-Use four spaces, snake_case functions/modules, PascalCase classes, and annotations for new public interfaces. Preserve upstream formatting and avoid unrelated changes. Legacy pre-commit hooks exist; they are separate from CI's limited Ruff checks.
+Use four spaces, annotated public interfaces, snake_case functions/modules, and PascalCase classes. Never reformat upstream files. Tests use `test_*.py`; no coverage threshold is configured. Default pytest excludes real-device diagnostics under `gello/`.
 
-Name tests `test_*.py`. No coverage threshold is configured. Mock serial access and exercise failure and cleanup paths. Default pytest excludes hardware diagnostics under `src/`. Real-device verification requires operator confirmation. Real robot initialization must report errors rather than silently use fake state, and acquired drivers must close after initialization failure or normal exit.
+Real adapters must reject fake fallback, busy ports, stale feedback, and initialization failure. Bound reads and cleanup; never kill port owners or change permissions automatically. Keep calibration, gripper, multi-turn, and filtering parity with upstream. Hardware verification requires operator confirmation. Native `gello.*` retains its original behavior; local policies apply only to the adapter.
 
 ## Commits & Pull Requests
 
-Use concise imperative subjects, preferably conventional prefixes. Describe behavior, upstream compatibility, checks, hardware-validation status, and related issues. Update reference docs and CHANGELOG with behavior changes. Retain MIT notices and third-party attribution.
-
-Standalone and controller submodule checkouts are independent. Publish tested library commits before updating the parent gitlink. Never commit environments, build artifacts, egg metadata, or collected data.
+Honor requests to validate before committing. Prefer conventional imperative subjects and report upstream changes, checks, hardware status, and compatibility. Publish tested submodule commits before updating parent gitlinks. Independent checkouts do not synchronize automatically. Keep licenses and notices; exclude environments, caches, datasets, and build outputs.

@@ -1,34 +1,42 @@
-# 上游兼容与本地差异
+# 上游基线与本地扩展
 
-上游：[wuphilipp/gello_software](https://github.com/wuphilipp/gello_software)，MIT License。此前保留的上游说明位于 [OFFICIAL.md](OFFICIAL.md)；它经过本 fork 适配，不是当前上游 main 的逐字镜像。
+## 固定版本
 
-本次整理的目标是沿用现有 GELLO API，减少应用逻辑对 fork 的侵入。没有重新实现上游主手、机器人抽象、YAM/ROS2 或仿真系统。
+- GELLO：[wuphilipp/gello_software](https://github.com/wuphilipp/gello_software/tree/204f53a64bef89471a1e483b0f874f755fbd2d3a)，提交 `204f53a64bef89471a1e483b0f874f755fbd2d3a`。
+- DynamixelSDK：`3450c7078917b262d9b36042c15444047aae226e`，Python 元数据 3.7.51。
+- MuJoCo Menagerie：`7f0684e0d2f6c9d75174d1a51e4924b7519119f9`，可选初始化。
 
-## 继续保留的适配
+[OFFICIAL.md](OFFICIAL.md) 保存上游说明，当前 fork 的 uv 开发入口是 [README](../README.md)。
 
-- 现有 `src/agilex_gello_software/` 命名空间、uv packaging、基础/可选依赖分组及惰性 CLI。
-- `GelloAgent`、`DynamixelRobot`、驱动的显式 close，以及现有通信失败与陈旧读取检查。
-- 真实设备模式显式禁用 fake fallback；torque 初始化或起始角度选择失败时释放驱动。
-- 通用上游机器人、相机实验、配置生成和 ROS2 代码。
-- checkout 资源路径解析、可选依赖分组，以及仿真内置夹爪的归一化适配。
+## 原文件保持方式
 
-这些差异服务于包装和硬件生命周期，应用仍通过上游的 `GelloAgent(port, dynamixel_config, start_joints)` 与 `act(obs)` 交互。
+`gello/` 恢复原始命名空间和全部源文件；`experiments/`、`scripts/`、`configs/`、ROS2、Dockerfile、setup.py、requirements 和硬件资料按固定提交恢复。DynamixelSDK 恢复原始 submodule 来源，不再用 PyPI 4.0.5 代替。ROS2 包括该基线已有的波特率/发布频率更新。
 
-## 本次迁出的项目内容
+清单 [upstream.json](../src/agilex_gello_software/upstream.json) 记录 169 个原文件的内容哈希/执行位和两个 gitlink。三个原文件有声明过的例外：
 
-- PiPER-X 专用 follow、follow-record、movejs 命令。
-- 对应的三个 `experiments/piper_x_*.py` 包装。
-- raw episode recorder 及其应用测试。
-- Python 端口表中的 FTBM4Z46 本机校准，改由 controller 显式传入。
+| 文件 | 原因 |
+| --- | --- |
+| `README.md` | 当前 fork 的 uv、架构、使用与开发入口，上游说明放到 OFFICIAL |
+| `.github/workflows/pythonapp.yml` | uv、Python 3.11、本地回归和原文件基础 lint |
+| `.gitignore` | uv 环境/构建排除，并恢复上游已跟踪 title.png 的可见性 |
 
-以上逻辑和配置由 controller 维护。库的 YAM 示例端口、offset 与夹爪端点恢复为上游值；当前安装通过 controller 显式传参保持原有数值。
+pyproject、uv.lock、.python-version、本地 `src/`、tests、贡献/agent 指南、CHANGELOG 和 docs 为本地新增内容，不是对上游业务文件的补丁。
 
-`configs/yam_auto_generated*.yaml` 等已有生成文件仍可能包含 FTBM4Z46 安装值；它们不会被 controller 自动读取，也不能当作所有设备的通用默认值。
+## src 扩展及行为
 
-## 同步范围
+本地驱动继承上游传输/命令接口，在 src 中实现真实初始化、错误传播、首帧/陈旧读取检查和有界关闭；本地 robot/agent 复用上游状态映射、滤波与 act，提供显式 close。原生模块不被 monkey patch，直接运行上游脚本时仍是原生策略。
 
-此前比较的上游基线为 `204f53a64bef89471a1e483b0f874f755fbd2d3a`。本 fork 不是该提交的完整同步版本：上游 ROS2 可配置波特率与发布频率等更新尚未合入，本 fork 的对应路径仍使用固定设置。非 ROS 主手接口和 ROS2 驱动应分别评估，不能用其中一条路径的参数或保护机制推断另一条。
+通用 CLI 使用原始实验脚本，不再维护改名后的整套副本。旧 fork 的仿真夹爪特殊修改、SpaceMouse 数据类修补和应用 run-env 默认值未写回原文件；这些路径按固定上游实现执行。当前 PiPER-X 主流程不依赖它们。
 
-## 后续合并建议
+本机校准在 controller TOML；旧生成文件移到 src 的 `configs/legacy/`。controller 主手导入路径、raw v1 和转换边界保持兼容；安装脚本新增必需 SDK 初始化，两份 uv.lock 同步改用本地 SDK。
 
-先比较上游 API 和硬件行为，再移植必要的 packaging/lifecycle 改动。将安装设备差异留在应用配置里，将从臂控制与数据存储留在应用层。避免为保持 PiPER-X 工作流而继续修改上游通用环境。
+## 审计、验收与后续提交
+
+```bash
+uv run --frozen python -m agilex_gello_software.upstream
+uv run --frozen pytest
+```
+
+审计离线比较原文件及已初始化第三方 checkout；可选 Menagerie 未初始化时跳过。它校验当前磁盘内容，不代表原生实验/真实硬件已全部验证。
+
+维护者已确认当前流程运行正常。版本更新时一起记录 `.gitmodules` 与 DynamixelSDK gitlink，不能把第三方源文件作为普通目录展开提交。先验证并发布 GELLO 提交，再提交 controller 的指针与安装/锁文件变化；后续设备路径分别记录验证结果。
