@@ -1,8 +1,6 @@
 # GELLO: General, Low-Cost, and Intuitive Teleoperation Framework
 
-<p align="center">
-  <img src="../imgs/title.png" />
-</p>
+> This file preserves earlier upstream-oriented instructions, including local fork adaptations. For this checkout, start with [README](../README.md), [installation](installation.md), and [CLI reference](reference/cli.md). PiPER-X application commands now belong to agilex-controller; upstream simulation and external hardware workflows require their own dependencies.
 
 GELLO is a general, low-cost, and intuitive teleoperation framework for robot manipulators. This repository contains all the software components for GELLO.
 
@@ -42,7 +40,7 @@ Create and activate a virtual environment:
 
 ```bash
 uv sync --frozen --extra full --python 3.11
-source .venv/bin/activate  # Run this every time you open a new shell
+source .venv/bin/activate  # Optional when using uv run
 git submodule update --init --recursive
 ```
 
@@ -127,8 +125,6 @@ See existing implementations in `src/agilex_gello_software/robots/` for referenc
 - `xarm_robot.py` - xArm robots
 - `yam.py` - YAM robot
 
-=======
-
 #### 1. Manual `gello_agent` setup
 
 Set your GELLO and robot arm to a known, matching configuration (see images below) and run the offset detection script.
@@ -182,9 +178,9 @@ Add the generated joint offsets to `src/agilex_gello_software/agents/gello_agent
 Use the read-only experiment command to print the mapped J1–J6 positions in radians and degrees, followed by the normalized gripper value:
 
 ```bash
-cd ~/projects/agilex/agilex-gello-software
+cd /path/to/agilex-gello-software
 .venv/bin/python experiments/read_gello_joints.py \
-    --gello-port /dev/serial/by-id/usb-FTDI_USB__-__Serial_Converter_FTBM4Z46-if00-port0
+    --gello-port /dev/serial/by-id/usb-FTDI_USB__-__Serial_Converter_FTA2U4GA-if00-port0
 ```
 
 Stop any running GELLO client before using this command because only one process can open the Dynamixel serial port at a time. This command does not connect to or control the follower robot.

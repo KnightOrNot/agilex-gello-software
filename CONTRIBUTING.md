@@ -1,4 +1,4 @@
-# GELLO 开发指南
+# 贡献指南
 
 ## 责任边界
 
@@ -19,7 +19,7 @@
 
 ## 上游同步
 
-[上游仓库](https://github.com/wuphilipp/gello_software) 的 API 与总体结构是兼容基线。保持已存在的包命名和 uv 适配，避免顺带重写通用模块。具体保留的本地差异见 [UPSTREAM.md](UPSTREAM.md)。
+[上游仓库](https://github.com/wuphilipp/gello_software) 的 API 与总体结构是兼容基线。保持已存在的包命名和 uv 适配，避免顺带重写通用模块。具体保留的本地差异见 [UPSTREAM.md](docs/UPSTREAM.md)。
 
 controller 当前通过显式设备配置和 `GelloAgent.act()/close()` 使用库；上游没有 `close()` 的版本需要保留对应最小生命周期扩展。
 
@@ -32,7 +32,8 @@ controller 当前通过显式设备配置和 `GelloAgent.act()/close()` 使用�
 ```bash
 uv sync --frozen
 uv run --frozen pytest
-uv run ruff check src tests experiments scripts --select E9,F63,F7,F82
+uv run --frozen ruff check src tests experiments scripts --select E9,F63,F7,F82
+uv build
 ```
 
 上游文件保留其已有风格；新增测试和独立小模块可用 Ruff 做完整检查，避免混入全库格式化。测试使用模拟驱动，不打开真实串口。
@@ -41,6 +42,16 @@ uv run ruff check src tests experiments scripts --select E9,F63,F7,F82
 
 ## 多仓库联调
 
-`../agilex-gello-software/` 与 controller 内的 submodule 是独立工作副本。先测试并发布本库提交，再更新 controller 的 submodule 指针。controller 环境通过本地 editable 路径导入它包含的那份 submodule；修改独立工作副本不会自动改变 controller 的导入内容。
+工作区中的独立 `agilex-gello-software/` checkout 与 `agilex-controller/agilex-gello-software/` submodule 是两个工作副本。先测试并发布本库提交，再更新 controller 的 submodule 指针。controller 环境通过本地 editable 路径导入它包含的那份 submodule；修改独立工作副本不会自动改变 controller 的导入内容。
 
 应用集成检查在 controller 根目录执行 `uv run pytest`。raw schema 和转换回归由 controller/converter 维护；库不再包含 PiPER-X raw 录制测试。
+
+## 风格、测试与提交
+
+Python 使用四空格缩进；新公开接口添加类型标注，函数/模块用 `snake_case`，类用 `PascalCase`。保留上游文件已有排版。历史 pre-commit 配置包含 Black、isort、flake8；当前 Python CI 使用上面的 Ruff 基础规则，不要求全库 Ruff 格式化。
+
+测试文件使用 `tests/test_*.py`，没有覆盖率门槛。为读取错误、陈旧反馈、初始化失败与资源释放增加针对性测试；默认 pytest 不收集 `src/` 下需要设备的诊断脚本。真实硬件验证需操作员确认，PR 中写明设备、检查步骤和结果。
+
+提交主题优先使用简洁祈使句和 `fix:`、`refactor:`、`docs:` 等前缀。PR 说明最终行为、上游兼容性、依赖/配置变化、测试结果及硬件验证状态，并关联相关 issue。不要提交 `.venv`、缓存、`*.egg-info`、采集数据或生成的构建产物。
+
+参数或行为变化时同步更新 README、`docs/reference/`、CHANGELOG 和相关测试。保留硬件图片、ROS2 资料和上游版权声明；新增第三方代码需记录来源与许可。

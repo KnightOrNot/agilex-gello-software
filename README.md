@@ -9,18 +9,31 @@ PiPER-X 项目的设备组合、ZMQ 客户端、JS 定位、跟随与 raw 录制
 ```bash
 uv sync --frozen
 uv run agilex-gello-software --help
-uv run pytest
 ```
 
 基础依赖只满足主手和基础工具。需要上游可选功能时安装相应 extra：
 
 ```bash
-uv sync --extra simulation
-uv sync --extra robots
-uv sync --extra camera
+uv sync --frozen --extra simulation
+uv sync --frozen --extra robots
+uv sync --frozen --extra camera
 ```
 
-`full` 包含全部可选依赖。仿真模型仍需按上游说明单独初始化，普通主手读取不需要下载。
+`full` 包含全部可选依赖。仿真模型需单独初始化；普通主手读取不需要下载。系统依赖、串口权限和仿真准备见[安装指南](docs/installation.md)。
+
+## 职责与目录
+
+```text
+src/agilex_gello_software/  主手 API、驱动、机器人抽象与 CLI
+configs/                  YAML 示例、模板与生成配置
+experiments/              上游实验入口的兼容包装
+scripts/                  校准、配置生成与辅助工具
+tests/                    CLI 和硬件生命周期回归
+ros2/                     独立 ROS2 工作流
+third_party/              MuJoCo Menagerie submodule
+imgs/                     硬件与校准参考图片
+docs/                     架构、安装、参考与上游说明
+```
 
 ## Python 接口
 
@@ -62,14 +75,30 @@ finally:
 | `agilex-gello-software follow` | `uv run agilex-controller follow` |
 | `agilex-gello-software follow-record` | `uv run agilex-controller record` |
 | `agilex-gello-software movejs` | `uv run agilex-controller movejs` |
-| 当前安装的主手读取 | `uv run agilex-controller read --json` |
+| 当前安装的主手读取 | `uv run agilex-controller read` |
 
 PiPER-X 专用实验包装和 raw recorder 已移出；默认频率、映射、采集与安全退出以 controller 文档为准。
 
-## 维护与来源
+## 开发与文档
 
-- [开发指南](docs/DEVELOPMENT.md)
+```bash
+uv run --frozen pytest
+uv run --frozen ruff check src tests experiments scripts --select E9,F63,F7,F82
+uv build
+```
+
+测试使用模拟驱动，不打开真实串口。库默认 pytest 仅收集 `tests/`；源码目录中的硬件诊断脚本不属于该测试集。
+
+- [架构与数据流](docs/index.md)
+- [安装指南](docs/installation.md)
+- [CLI 参考](docs/reference/cli.md)
+- [设备配置](docs/reference/config.md)
+- [故障排查](docs/reference/errors.md)
+- [贡献指南](CONTRIBUTING.md)
+- [版本记录](CHANGELOG.md)
 - [上游差异说明](docs/UPSTREAM.md)
-- [保留的上游 README](docs/README_OFFICIAL.md)
+- [保留的上游说明](docs/OFFICIAL.md)
 - [ROS2 文档](ros2/README.md)
 - [MIT License](LICENSE)
+
+保留 Philipp Wu 的 MIT 版权声明。FACTR 与模型等第三方组件继续适用各自许可，来源见[架构文档](docs/index.md#来源与许可)。
