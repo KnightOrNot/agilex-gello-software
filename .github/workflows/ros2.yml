@@ -24,6 +24,8 @@ jobs:
           BUILDX_BAKE_ENTITLEMENTS_FS: "0"
         with:
           subFolder: ./ros2
+          # This job tests the workspace and does not publish a registry image.
+          push: never
           runCmd: |
             set -e
             cd ros2

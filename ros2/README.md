@@ -304,6 +304,10 @@ includes [the upstream fix](https://github.com/docker/compose/pull/14325).
 Setting `COMPOSE_BAKE=false` is not a workaround on Compose v5, which removed the
 internal BuildKit builder.
 
+The workflow also sets `push: never`: it builds and tests locally on the runner
+without publishing a container image. Leaving the action's default push policy
+without an `imageName` makes its post step fail even when build and tests pass.
+
 ### SerialException(msg.errno, "could not open port {}: {}".format(self._port, msg))
 
 The open com port could not be opened. Possible reasons are:
