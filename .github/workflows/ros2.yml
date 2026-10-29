@@ -13,13 +13,19 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v6
 
       - name: Build and test ROS 2 workspace
         uses: devcontainers/ci@v0.3
+        env:
+          # Dev Containers generates Dockerfile-with-features outside the build
+          # context. Compose does not yet grant Bake read access to that path.
+          # Remove after the runner includes docker/compose#14325.
+          BUILDX_BAKE_ENTITLEMENTS_FS: "0"
         with:
           subFolder: ./ros2
           runCmd: |
+            set -e
             cd ros2
             colcon build --cmake-args -DCMAKE_EXPORT_COMPILE_COMMANDS=ON -DCHECK_TIDY=ON
             colcon test --event-handlers console_direct+ --pytest-args -v

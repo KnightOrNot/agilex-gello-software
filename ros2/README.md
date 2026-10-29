@@ -288,6 +288,22 @@ colcon test
 
 ## Troubleshooting
 
+### Dev-Container build fails with `additional privileges requested` / `fs.read`
+
+Dev Containers generates a temporary `Dockerfile-with-features` outside the
+Compose build context. With affected Compose versions and Buildx 0.37.2 or newer,
+Bake rejects that path before executing any Dockerfile instructions. This is
+[Docker Compose issue #14285](https://github.com/docker/compose/issues/14285),
+not a ROS dependency installation failure.
+
+The ROS 2 GitHub Actions workflow temporarily sets
+`BUILDX_BAKE_ENTITLEMENTS_FS=0` only on the Dev Containers step. This disables
+Bake's filesystem entitlement check for that step; it does not change the image's
+runtime permissions. Remove the workaround once the runner's Compose release
+includes [the upstream fix](https://github.com/docker/compose/pull/14325).
+Setting `COMPOSE_BAKE=false` is not a workaround on Compose v5, which removed the
+internal BuildKit builder.
+
 ### SerialException(msg.errno, "could not open port {}: {}".format(self._port, msg))
 
 The open com port could not be opened. Possible reasons are:
