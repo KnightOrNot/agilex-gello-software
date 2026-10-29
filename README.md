@@ -4,6 +4,8 @@
 
 `agilex-gello-software` 是 GELLO 主手的独立软件项目。本仓库在上游 GELLO 的基础上增加了七自由度状态读取、AgileX PiPER-X 遥操作、JS 定位和原始数据记录，并使用 uv 统一管理 Python、依赖、虚拟环境、锁文件和命令行入口。
 
+`DynamixelRobot(real=True)` 禁止驱动回退为假反馈；设备连接或扭矩初始化失败会
+报错，扭矩初始化失败时释放串口。显式 `real=False` 的仿真路径仍可使用。
 > [!WARNING]
 > `read` 只读取 GELLO，但 `follow`、`follow-record`、`movejs` 以及部分官方工作流会向真实机械臂发送命令。运行前必须固定设备、清空工作空间并确保急停按钮触手可及。
 
