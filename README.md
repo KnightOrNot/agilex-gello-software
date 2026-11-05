@@ -1,5 +1,7 @@
 # agilex-gello-software
 
+所有开发与运行环境统一由 uv 管理：按 `.python-version` 选择 Python，使用本项目 `.venv`，依赖按 `uv.lock` 同步。
+
 仓库及安装包名称为 `agilex-gello-software`，Python 导入包为 `agilex_gello_software`。命令入口：`agilex-gello-software`（兼容短命令 `gello`）。
 
 `agilex-gello-software` 是 GELLO 主手的独立软件项目。本仓库在上游 GELLO 的基础上增加了七自由度状态读取、AgileX PiPER-X 遥操作、JS 定位和原始数据记录，并使用 uv 统一管理 Python、依赖、虚拟环境、锁文件和命令行入口。
@@ -24,7 +26,7 @@
 
 - Ubuntu 22.04 或更新版本
 - Git、curl、USB 串口访问权限和基础编译工具
-- pyenv 和 Python 3.12；`.python-version` 声明项目版本
+- uv 管理的 Python 3.12；`.python-version` 声明项目版本
 - uv
 - GELLO 主手及 FTDI/Dynamixel 串口适配器
 - PiPER-X 功能额外需要独立的 `agilex-sdk-python` 服务与 USB-CAN
@@ -32,7 +34,7 @@
 
 ## （3）快速开始
 
-### 1. 安装系统工具、pyenv 与 uv
+### 1. 安装系统工具与 uv
 
 ```bash
 sudo apt update
@@ -72,14 +74,11 @@ Python 3.12 的 `simulation` / `full` 使用 `pin==3.7.0`，并约束
 
 ### 3. 创建环境
 
-Python 由 pyenv 安装和选择，uv 负责 `.venv` 和依赖。基础 GELLO 与 PiPER-X 功能：
+Python、`.venv` 和依赖统一由 uv 管理。基础 GELLO 与 PiPER-X 功能：
 
 ```bash
-requested_version="$(<.python-version)"
-resolved_version="$(pyenv latest -k "$requested_version")"
-pyenv install -s "$resolved_version"
-interpreter="$(PYENV_VERSION="$resolved_version" pyenv which python)"
-UV_NO_MANAGED_PYTHON=1 uv sync --frozen --python "$interpreter"
+uv python install 3.12
+uv sync --frozen
 ```
 
 按需安装可选功能：
@@ -91,7 +90,7 @@ uv sync --extra robots
 uv sync --extra full
 ```
 
-显式传递 pyenv 解释器并设置 `UV_NO_MANAGED_PYTHON=1`，可以防止 uv 自行下载 Python。`uv sync` 会根据 `uv.lock` 创建或更新 `.venv`，无需手动执行 `uv venv`、`uv pip install -e .` 或激活环境。日常命令统一通过 `uv run` 执行。
+uv 读取 `.python-version` 并按需下载对应 Python。`uv sync` 会根据 `uv.lock` 创建或更新 `.venv`，无需手动执行 `uv venv`、`uv pip install -e .` 或激活环境。日常命令统一通过 `uv run` 执行。
 
 ### 4. 配置串口权限
 
