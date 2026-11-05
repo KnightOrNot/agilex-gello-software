@@ -41,7 +41,7 @@ curl -LsSf https://astral.sh/uv/install.sh | sh
 Create and activate a virtual environment:
 
 ```bash
-uv sync --frozen --extra full --python 3.11
+uv sync --frozen --extra full --python 3.12
 source .venv/bin/activate  # Run this every time you open a new shell
 git submodule update --init --recursive
 ```
