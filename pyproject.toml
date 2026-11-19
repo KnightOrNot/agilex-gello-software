@@ -1,6 +1,6 @@
 [project]
 name = "agilex-gello-software"
-version = "0.1.0"
+version = "0.1.1"
 description = "GELLO teleoperation and PiPER-X data collection software"
 readme = "README.md"
 requires-python = ">=3.12,<3.13"
@@ -17,6 +17,7 @@ dependencies = [
 ]
 
 [project.optional-dependencies]
+hal = ["agilex-contract>=0.1.1", "msgpack>=1.1", "pyzmq>=26.0"]
 # pin 3.7 wheels link against urdfdom ABI 4 and tinyxml2 ABI 10.
 camera = ["pillow>=10", "pyrealsense2>=2.55"]
 simulation = ["dm-control>=1.0.20", "mujoco>=3.2", "numpy-quaternion>=2024.0", "pin==3.7.0", "cmeel-urdfdom>=4,<5", "cmeel-tinyxml2>=10,<11", "pygame>=2.6", "pyqt6>=6.7"]
@@ -46,3 +47,6 @@ select = ["E", "F", "I"]
 
 [tool.uv]
 package = true
+
+[tool.uv.sources]
+agilex-contract = { path = "../agilex-contract", editable = true }
